@@ -21,8 +21,10 @@
 #include <string.h>
 
 // this should be enough
-static char buf[65536] = {};
-static char code_buf[65536 + 128] = {}; // a little larger than `buf`
+#define MAX_BUF_SIZE 65536
+
+static char buf[MAX_BUF_SIZE] = {};
+static char code_buf[MAX_BUF_SIZE + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -31,9 +33,84 @@ static char *code_format =
 "  return 0; "
 "}";
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+int index_buf = 0;
+int choose(int n)
+{
+  return rand() % n; // 0 1 2
 }
+void gen_num()
+{
+  int num = rand() % 100 + 1; // 生成1到100之间的随机数
+  int len = snprintf(buf + index_buf, MAX_BUF_SIZE - index_buf, "%d", num);
+  if (len >= 0 && (size_t)len < MAX_BUF_SIZE - index_buf)
+  {
+    index_buf += len;
+  }
+  else
+  {
+    //printf("Buffer overflow in gen_num\n");
+    return;
+  }
+}
+void gen(char c)
+{
+  if (index_buf < MAX_BUF_SIZE - 1)
+  {
+    buf[index_buf++] = c;
+  }
+  else
+  {
+    //printf("Buffer overflow in gen\n");
+    return;
+  }
+}
+void gen_rand_op()
+{
+  const char *ops[] = {"+", "-", "*", "/"};
+  const char *op = ops[rand() % 4];
+  int len = snprintf(buf + index_buf, MAX_BUF_SIZE - index_buf, "%s", op);
+  if (len >= 0 && (size_t)len < MAX_BUF_SIZE - index_buf)
+  {
+    index_buf += len;
+  }
+  else
+  {
+    //printf("Buffer overflow in gen_rand_op\n");
+    return;
+  }
+}
+static void gen_rand_expr()
+{
+  //buf[0] = '\0';
+  if (index_buf > MAX_BUF_SIZE)
+  {
+    printf("overSize\n");
+    return;
+  }
+  switch (choose(3))
+  {
+  case 0:
+    gen_num();
+    break;
+  case 1:
+    gen('(');
+    gen_rand_expr();
+    gen(')');
+    break;
+  default:
+    gen_rand_expr();
+    gen_rand_op();
+    gen_rand_expr();
+    break;
+  }
+}
+
+void reset_buffer()
+{
+  memset(buf, 0, sizeof(buf));
+  index_buf = 0;
+}
+
 
 int main(int argc, char *argv[]) {
   int seed = time(0);
@@ -44,7 +121,9 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    reset_buffer();
     gen_rand_expr();
+    buf[index_buf] = '\0';
 
     sprintf(code_buf, code_format, buf);
 

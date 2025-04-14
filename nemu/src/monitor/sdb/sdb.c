@@ -17,15 +17,26 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "sdb.h"
+#include <memory/host.h>
+#include <memory/paddr.h>
+#include <device/mmio.h>
+#include <isa.h>
+#include "/home/zs/ysyx-workbench/nemu/src/monitor/sdb/watchpoint.h"
+#include "/home/zs/ysyx-workbench/nemu/src/monitor/sdb/expr.h"
 
 static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+void watchpoint_create();
+void sdb_watchpoint_display();
+void free_wp();
+void watchpoint_delete();
+//uint32_t expr(char *e, bool *success);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
-static char* rl_gets() {
+static char *rl_gets()
+{
   static char *line_read = NULL;
 
   if (line_read) {
@@ -35,11 +46,81 @@ static char* rl_gets() {
 
   line_read = readline("(nemu) ");
 
-  if (line_read && *line_read) {
-    add_history(line_read);
+  if (line_read && *line_read) {// 如果 line_read 不为 NULL 且字符串不为空（即 *line_read != '\0'），
+    add_history(line_read);     // 则将其添加到历史记录中。
   }
 
   return line_read;
+}
+static int cmd_w(char *args)
+{
+  watchpoint_create(args);
+  return 0;
+}
+
+static int cmd_d(char *args)
+{
+  if (args == NULL)
+    printf("No args.\n");
+  else
+  {
+    watchpoint_delete(atoi(args));
+  }
+  return 0;
+}
+static int cmd_p(char *args){
+  if (args == NULL){
+    printf("NO ARGS.\n");
+    return 0;
+  }
+  bool flag = false;
+  
+  uint32_t res = expr(args, &flag);
+  printf("Result of expression is %u.\n", res);
+
+  return 0;
+
+}
+
+static int cmd_x(char *args){
+  char *N = strtok(args, " ");
+  char *EXPR = N + strlen(N) + 1;
+  int n = 0;
+  paddr_t addr = 0;
+  sscanf(N, "%d", &n);
+  sscanf(EXPR, "%x", &addr);
+  for (; n > 0; n--)
+  {
+    printf("%08x\n",paddr_read(addr, 4));
+    addr += 4;
+  };
+  return 0;
+}
+static int cmd_info(char *args){
+  char *arg = strtok(args, " ");
+  if (arg == NULL || (strcmp(arg, "r") != 0 && strcmp(arg, "w") != 0))
+  {
+    printf("Only 'r' or 'w' allowed\n");
+  }
+  else if (strcmp(arg, "r") == 0)
+  {
+    isa_reg_display();
+  }
+  else if (strcmp(arg, "w") == 0)
+  {
+    sdb_watchpoint_display();
+  }
+
+    return 0;
+}
+static int cmd_si(char *args)
+{
+  int N = 1;
+  if(args != NULL){
+    sscanf(args, "%d", &N);
+  }
+  cpu_exec(N);
+  return 0;
 }
 
 static int cmd_c(char *args) {
@@ -63,12 +144,17 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  {"si", "Execute next N instructions", cmd_si},
+  {"info","Display values of regs",cmd_info},
+  {"x","scan memory",cmd_x},
+  {"p","Expression evaluation",cmd_p},
+  {"w","create watchpoint",cmd_w},
+  {"d","delete watchpoint",cmd_d}
   /* TODO: Add more commands */
 
 };
 
-#define NR_CMD ARRLEN(cmd_table)
+#define NR_CMD ARRLEN(cmd_table)              //获取cmd_table长度
 
 static int cmd_help(char *args) {
   /* extract the first argument */
@@ -113,7 +199,7 @@ void sdb_mainloop() {
     /* treat the remaining string as the arguments,
      * which may need further parsing
      */
-    char *args = cmd + strlen(cmd) + 1;
+    char *args = cmd + strlen(cmd) + 1;//+1 因为有空格，
     if (args >= str_end) {
       args = NULL;
     }

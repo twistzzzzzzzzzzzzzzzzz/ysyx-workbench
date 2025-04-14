@@ -215,3 +215,9 @@ config RT_CHECK
   default y
 
 endmenu
+
+menu "Watchpoint Options"
+    config WATCHPOINT
+        bool "Enable watchpoint"
+        default n
+endmenu
