@@ -18,7 +18,8 @@
 
 #include <isa.h>
 
-typedef struct Decode {
+typedef struct Decode
+{ // 这个结构体用于存放在执行一条指令过程中所需的信息, 包括指令的PC, 下一条指令的PC等.
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
