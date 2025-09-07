@@ -83,19 +83,40 @@ static int cmd_p(char *args){
 }
 
 static int cmd_x(char *args){
-  char *N = strtok(args, " ");
-  char *EXPR = N + strlen(N) + 1;
-  int n = 0;
-  paddr_t addr = 0;
-  sscanf(N, "%d", &n);
-  sscanf(EXPR, "%x", &addr);
-  for (; n > 0; n--)
-  {
-    printf("%08x\n",paddr_read(addr, 4));
-    addr += 4;
-  };
+    // 第一个参数：N
+    char *N = strtok(args, " ");
+    if (N == NULL) {
+        printf("Usage: x N EXPR\n");
+        return 0;
+    }
+
+    // 第二个参数：EXPR
+    char *EXPR = strtok(NULL, " ");
+    if (EXPR == NULL) {   // 没有提供地址参数
+        printf("Missing address argument!\n");
+        return 0;
+    }
+    EXPR = N + strlen(N) + 1;
+    int n = 0;
+    paddr_t addr = 0;
+    sscanf(N, "%d", &n);
+    sscanf(EXPR, "%x", &addr);
+    if(addr < 0x80000000){
+      printf("address = 0x%08x is out of bound of pmem [0x80000000, 0x87ffffff] at pc = 0x80000000\n",addr);
+      return 0;
+    }else{
+    for (; n > 0; n--)
+    {
+      printf("0x%08x\n",paddr_read(addr, 4));
+      addr += 4;
+    }
   return 0;
-}
+
+    }
+  }
+
+
+
 static int cmd_info(char *args){
   char *arg = strtok(args, " ");
   if (arg == NULL || (strcmp(arg, "r") != 0 && strcmp(arg, "w") != 0))
