@@ -98,7 +98,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
 #endif
 }
-}
 
 static void execute(uint64_t n) {
   Decode s;
