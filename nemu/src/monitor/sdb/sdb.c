@@ -107,7 +107,7 @@ static int cmd_x(char *args){
     }else{
     for (; n > 0; n--)
     {
-      printf("0x%08x\n",paddr_read(addr, 4));
+      printf("%08x:  0x%08x\n",addr,paddr_read(addr, 4));
       addr += 4;
     }
   return 0;
