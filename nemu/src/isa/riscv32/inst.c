@@ -34,12 +34,17 @@ enum {
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immJ() do { \
-  *imm = SEXT( \
-    (BITS(i, 20, 20) << 11) | \
-    (BITS(i, 10, 1) << 21) | \
-    (BITS(i, 11, 11) << 21) | \
-    (BITS(i, 19, 12) << 12), 21); \
+  uint32_t part1 = BITS(i, 31, 31) << 20; \
+  uint32_t part2 = BITS(i, 30, 21) <<1;  \
+  uint32_t part3 = BITS(i, 20, 20) << 11; \
+  uint32_t part4 = BITS(i, 19, 12)<<12; \
+  //printf("part1: 0x%x, part2: 0x%x, part3: 0x%x, part4: 0x%x\n", part1, part2, part3, part4); 
+  *imm = SEXT((part1 | part2 | part3 | part4), 20); \
+  //printf("imm: 0x%x\n", *imm); 
 } while (0)
+
+
+
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst;
@@ -75,7 +80,7 @@ static int decode_exec(Decode *s) {
 
   INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(rd) = s->pc + 4, s->dnpc = (src1 + imm) & ~1);
   INSTPAT("??????? ????? ????? 000 ????? 00100 11", addi   , I, R(rd) = src1 + imm);
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd) = s->pc + 4,printf("imm = %x\n",imm), s->dnpc = s->pc + imm);
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd) = s->pc + 4, s->dnpc = s->pc + imm);
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(rd) = s->pc + imm);
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();
