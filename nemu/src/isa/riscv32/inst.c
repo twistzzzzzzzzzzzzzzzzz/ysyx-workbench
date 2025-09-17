@@ -38,9 +38,9 @@ enum {
   uint32_t part2 = BITS(i, 30, 21) <<1;  \
   uint32_t part3 = BITS(i, 20, 20) << 11; \
   uint32_t part4 = BITS(i, 19, 12)<<12; \
-  //printf("part1: 0x%x, part2: 0x%x, part3: 0x%x, part4: 0x%x\n", part1, part2, part3, part4); 
+  printf("part1: 0x%x, part2: 0x%x, part3: 0x%x, part4: 0x%x\n", part1, part2, part3, part4); \
   *imm = SEXT((part1 | part2 | part3 | part4), 20); \
-  //printf("imm: 0x%x\n", *imm); 
+  printf("imm: 0x%x\n", *imm); \
 } while (0)
 
 
