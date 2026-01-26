@@ -1,60 +1,90 @@
-`include "IF.v"
-`include "RegFile.v"
-`include "EX.v"
-
 module top(
-  input clk,
-  input rst
+    input clk,
+    input rst,
+    output reg [31:0] pc,
+    output [31:0] inst,
+    output [31:0] res,
+    output [31:0] x0, x1, x2, x3, x10
+);
+//pc
+
+wire [31:0] dnpc;
+
+
+always @(posedge clk) begin
+    if (rst) begin
+      pc <= 32'h8000_0000;
+    end else begin
+      pc <= dnpc;
+    end
+end
+
+
+
+IFU inst_fetch(
+    .clk(clk),
+    .pc (pc),
+    .rst(rst),
+    .inst(inst)
+
 );
 
-  wire [31:0] pc;
-  wire [31:0] inst;
-  wire [31:0] rdata1;
-  wire [31:0] rdata2;
-  wire [31:0] ex_result;
-  wire [4:0]  ex_rd;
-  wire        ex_wen;
+wire wen;
 
-  // Instruction Fetch
-  IF if_stage (
-    .clk(clk),
-    .rst(rst),
-    .pc(pc),
-    .inst(inst)
-  );
+wire [31:0] imm;
 
-  // Register File
-  RegFile reg_file (
-    .clk(clk),
-    .raddr1(inst[19:15]),
-    .rdata1(rdata1),
-    .raddr2(inst[24:20]),
-    .rdata2(rdata2),
-    .wen(ex_wen),
-    .waddr(ex_rd),
-    .wdata(ex_result)
-  );
 
-  // Execute
-  EX ex_stage (
-    .inst(inst),
-    .pc(pc),
-    .rdata1(rdata1),
-    .rdata2(rdata2),
-    .result(ex_result),
-    .rd(ex_rd),
-    .wen(ex_wen)
-  );
+wire [4:0]  raddr1;
+wire [4:0]  raddr2;
+wire [31:0] rdata1;
+wire [31:0] rdata2;
 
-  // In a real CPU, we would have more stages (MEM, WB)
-  // For now, the output of EX is directly written back.
+wire [4:0]  rd;
+wire [6:0]  opcode;
+wire [2:0]  func3;
 
-  // For debugging, you can add display statements here
-  always @(posedge clk) begin
-    if (!rst) begin
-      $display("PC: %h, Inst: %h, rdata1: %h, rdata2: %h, wen: %b, waddr: %d, wdata: %h",
-        pc, inst, rdata1, rdata2, ex_wen, ex_rd, ex_result);
-    end
-  end
+
+
+
+
+IDU inst_decode(    
+    .wen    (wen),
+    .inst   (inst),
+    .imm    (imm),
+    .raddr1 (raddr1),
+    .raddr2 (raddr2),
+    .rd     (rd),
+    .opcode (opcode),
+    .func3  (func3)
+);
+
+EXU inst_execute(
+    .clk    (clk),
+    .pc     (pc),
+    .imm    (imm),
+    .rdata1 (rdata1),
+    .rdata2 (rdata2),
+    .res    (res),
+    .opcode (opcode),
+    .func3  (func3),
+    .dnpc   (dnpc)
+);
+
+GPR gpr(
+    .clk    (clk),
+    .wen    (wen),
+    .raddr1 (raddr1),
+    .raddr2 (raddr2),
+    .wdata  (res),
+    .waddr  (rd),
+    .rdata1 (rdata1),
+    .rdata2 (rdata2),
+    .x0     (x0),
+    .x1     (x1),
+    .x2     (x2),
+    .x3     (x3),
+    .x10    (x10)
+);
+
 
 endmodule

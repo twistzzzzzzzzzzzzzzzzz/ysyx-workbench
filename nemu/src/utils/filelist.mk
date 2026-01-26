@@ -15,6 +15,8 @@
 
 ifeq ($(CONFIG_ITRACE)$(CONFIG_IQUEUE),)
 SRCS-BLACKLIST-y += src/utils/disasm.c
+SRCS-BLACKLIST-y += src/utils/iringbuf.c
+
 else
 LIBCAPSTONE = tools/capstone/repo/libcapstone.so.5
 CFLAGS += -I tools/capstone/repo/include

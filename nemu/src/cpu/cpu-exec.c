@@ -66,6 +66,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
 }
 
+extern void log_ftrace (vaddr_t pc, vaddr_t target, bool is_return);
 
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -93,10 +94,50 @@ static void exec_once(Decode *s, vaddr_t pc) {
   memset(p, ' ', space_len);
   p += space_len;
 
-  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-  disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
+  //void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  //disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
+  //    MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
+
+
 #endif
+  
+#ifdef CONFIG_ITRACE
+  iringbuf_write(s->logbuf);
+#endif
+
+#ifdef CONFIG_FTRACE
+  uint32_t f_inst = s->isa.inst;
+  // RISC-V 32 指令识别 (判断是否为 16 位压缩指令)
+  if ((f_inst & 0x3) != 0x3) {
+    // 16-bit Compressed Instructions
+    uint16_t c_inst = (uint16_t)f_inst;
+    if ((c_inst & 0xf07f) == 0x8002) { // c.jr rs1 (rs2 must be 0)
+        uint32_t rs1 = (c_inst >> 7) & 0x1f;
+        if (rs1 == 1) log_ftrace(s->pc, s->dnpc, true); // ret
+    } else if ((c_inst & 0xe003) == 0x2001) { // c.jal target
+        log_ftrace(s->pc, s->dnpc, false); // call
+    } else if ((c_inst & 0xf07f) == 0x9002) { // c.jalr rs1 (rs2 must be 0)
+        log_ftrace(s->pc, s->dnpc, false); // call
+    }
+  } else {
+    // 32-bit Instructions
+    uint32_t opcode = f_inst & 0x7f;
+    uint32_t rd = (f_inst >> 7) & 0x1f;
+    uint32_t rs1 = (f_inst >> 15) & 0x1f;
+    uint32_t imm_i = f_inst >> 20;
+
+    if (opcode == 0x6f) { // jal
+        if (rd != 0) log_ftrace(s->pc, s->dnpc, false);
+    } else if (opcode == 0x67) { // jalr
+        if (rd == 0 && rs1 == 1 && imm_i == 0) { // ret (jalr x0, 0(ra))
+            log_ftrace(s->pc, s->dnpc, true);
+        } else if (rd != 0) { // call via jalr
+            log_ftrace(s->pc, s->dnpc, false);
+        }
+    }
+  }
+#endif
+
 }
 
 static void execute(uint64_t n) {
@@ -121,6 +162,9 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
+  #ifdef CONFIG_ITRACE
+  iringbuf_display();
+#endif
   statistic();
 }
 
@@ -145,11 +189,11 @@ void cpu_exec(uint64_t n) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
-      Log("nemu: %s at pc = " FMT_WORD,
+      Log("nemu: %s at pc = " FMT_WORD " (code=%d)",
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
-          nemu_state.halt_pc);
+          nemu_state.halt_pc, nemu_state.halt_ret);
       // fall through
     case NEMU_QUIT: statistic();
   }
