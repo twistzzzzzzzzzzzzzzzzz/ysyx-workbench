@@ -1,6 +1,4 @@
-#include <am.h>
 #include <klib.h>
-#include <klib-macros.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
@@ -19,27 +17,73 @@ int abs(int x) {
   return (x < 0 ? -x : x);
 }
 
-int atoi(const char* nptr) {
-  int x = 0;
-  while (*nptr == ' ') { nptr ++; }
-  while (*nptr >= '0' && *nptr <= '9') {
-    x = x * 10 + *nptr - '0';
-    nptr ++;
+#define def_strtoXXX(type, name) \
+  type name(const char *nptr, char **endptr, int base) { \
+    type x = 0; \
+    while (isspace(*nptr)) { nptr ++; } \
+    while (*nptr >= '0' && *nptr <= '9') { \
+      x = x * 10 + *nptr - '0'; \
+      nptr ++; \
+    } \
+    if (endptr) { \
+      *(const char **)endptr = nptr; \
+    } \
+    return x; \
   }
-  return x;
+
+def_strtoXXX(long, strtol)
+def_strtoXXX(unsigned long, strtoul)
+def_strtoXXX(long long, strtoll)
+def_strtoXXX(unsigned long long, strtoull)
+
+int atoi(const char* nptr) {
+  return strtol(nptr, NULL, 10);
 }
+static char *addr = NULL;
 
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
 #if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  panic("Not implemented");
+  if (addr == NULL || (void *)addr < heap.start || (void *)addr >= heap.end) {
+    addr = heap.start;
+  }
+  size = (size_t)((size + 7) & ~7);
+  if ((uintptr_t)addr + size > (uintptr_t)heap.end) {
+    return NULL;
+  }
+  void *ret = addr;
+  addr += size;
+  return ret;
 #endif
   return NULL;
 }
 
+void *calloc(size_t nmemb, size_t size) {
+  size *= nmemb;
+  void *ret = malloc(size);
+  memset(ret, 0, size);
+  return ret;
+}
+
+void *realloc(void *ptr, size_t size) {
+  if (ptr == NULL) return malloc(size);
+  if (size == 0) {
+    free(ptr);
+    return NULL;
+  }
+  void *ret = malloc(size);
+  memcpy(ret, ptr, size);
+  free(ptr);
+  return ret;
+}
+
 void free(void *ptr) {
+}
+
+void exit(int status) {
+  halt(status);
 }
 
 #endif

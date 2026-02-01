@@ -17,6 +17,11 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+//#include "system/srrw.c"
+#include <common.h>
+
+word_t csr_read(uint32_t addr);
+void csr_write(uint32_t addr, word_t data);
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -34,8 +39,8 @@ enum {
 #define immU() do { *imm = SEXT(BITS(i, 31, 12),20) << 12; } while(0)
 
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
-#define immJ() do { *imm = SEXT((BITS(i, 31, 31) << 20 | BITS(i, 30, 21) <<1 | BITS(i, 20, 20) << 11 | BITS(i, 19, 12) << 12), 20); } while (0)
-#define immB() do { *imm = SEXT((BITS(i, 31, 31) << 12 | BITS(i, 30, 25) <<5 | BITS(i, 11,8) <<1 | BITS(i,7,7) <<11), 13); } while (0)
+#define immJ() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 20) | (BITS(i, 30, 21) << 1) | (BITS(i, 20, 20) << 11) | (BITS(i, 19, 12) << 12); } while (0)
+#define immB() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8) << 1); } while (0)
 
 
 
@@ -371,10 +376,16 @@ static int decode_exec(Decode *s) {
           return 0;
       }
 
+
+
+
       // If we reach here, it's an unimplemented compressed instruction
       INV(s->pc);
       return 0;
   }
+
+
+
 
   INSTPAT_START();
 
@@ -416,10 +427,14 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 110 ????? 00100 11", ori    , I, R(rd) = src1 | (word_t)imm);
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti   , I, R(rd) = (int32_t)src1 < (int32_t)imm ? 1 : 0);
   INSTPAT("??????? ????? ????? 011 ????? 00100 11", sltiu  , I, R(rd) = (uint32_t)src1 < (uint32_t)imm ? 1 : 0);
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, {word_t tmp = csr_read(imm); csr_write(imm, src1); R(rd) = tmp;});
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, {word_t tmp = csr_read(imm); csr_write(imm, tmp | src1); R(rd) = tmp;});
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, s->dnpc = isa_raise_intr(11, s->pc););
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = cpu.mepc;);
 
 
-  //
-  INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(rd) = Mr(src1 + imm, 4));INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb     , I, R(rd) = SEXT(Mr(src1 + imm, 1), 8));
+  INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(rd) = Mr(src1 + imm, 4));
+  INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb     , I, R(rd) = SEXT(Mr(src1 + imm, 1), 8));
   INSTPAT("??????? ????? ????? 001 ????? 00000 11", lh     , I, R(rd) = SEXT(Mr(src1 + imm, 2), 16));
   INSTPAT("??????? ????? ????? 101 ????? 00000 11", lhu    , I, R(rd) = Mr(src1 + imm, 2));
   INSTPAT("??????? ????? ????? 100 ????? 00000 11", lbu    , I, R(rd) = Mr(src1 + imm, 1));
