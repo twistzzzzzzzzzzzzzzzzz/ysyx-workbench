@@ -18,6 +18,9 @@
 
 #include <common.h>
 
+void iringbuf_write(const char *log);
+void iringbuf_display();
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };

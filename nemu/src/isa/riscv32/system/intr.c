@@ -20,7 +20,17 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    * Then return the address of the interrupt/exception vector.
    */
 
-  return 0;
+   #ifdef CONFIG_ETRACE
+  printf("[etrace] Raise Exception %d at PC 0x%08x, jump to 0x%08x\n", NO, epc, cpu.mtvec);
+#endif
+  cpu.mepc = epc + 4;
+
+  // 2. 设置异常原因 mcause (例如 ecall 的 NO 通常是 8 或 11)
+  cpu.mcause = NO;
+
+  // 3. 返回异常处理入口地址 (即之前 csrw 写入的那个 mtvec)
+  return cpu.mtvec;
+  
 }
 
 word_t isa_query_intr() {

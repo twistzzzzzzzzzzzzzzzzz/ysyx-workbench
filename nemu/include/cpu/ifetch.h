@@ -17,10 +17,18 @@
 
 #include <memory/vaddr.h>
 
-static inline uint32_t inst_fetch(vaddr_t *pc, int len) {
-  uint32_t inst = vaddr_ifetch(*pc, len);
-  (*pc) += len;
-  return inst;
+static inline uint32_t inst_fetch(vaddr_t *pc) {
+  uint32_t inst = vaddr_ifetch(*pc, 2);
+  if ((inst & 0x3) != 0x3) {
+    // 16-bit instruction
+    (*pc) += 2;
+    return inst;
+  } else {
+    // 32-bit instruction
+    uint32_t inst_high = vaddr_ifetch(*pc + 2, 2);
+    (*pc) += 4;
+    return inst | (inst_high << 16);
+  }
 }
 
 #endif
