@@ -59,7 +59,7 @@ __am_asm_trap:
 
   mv a0, sp
   call __am_irq_handle
-  mv sp, a0//将栈指针sp从a0中恢复回来
+  mv sp, a0// 将栈指针sp从a0中恢复回来
 
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
