@@ -82,6 +82,7 @@ IDU inst_decode(
     .gpr_ren    (gpr_ren),
     .mem_wen    (mem_wen),
     .mem_ren    (mem_ren),
+    
     .inst       (inst),
     .inst_valid (inst_valid),
     .imm        (imm),
@@ -97,10 +98,21 @@ wire [4:0]  gpr_waddr;
 wire [31:0] gpr_wdata;
 wire [31:0] gpr_rdata;
 wire [4:0]  gpr_raddr;
+wire wen_mtvec;
+wire wen_mepc;
+wire wen_mcause;
+wire wen_mastatus;
 
-
+wire [31:0] mepc_wdata;
+wire [31:0] mtvec_rdata;
+wire [31:0] mastatus_rdata;
+wire [31:0] mastatus_wdata;
+wire [31:0] mcause_rdata;
+wire [31:0] mcause_wdata;
+wire [31:0] mepc_rdata;
 EXU inst_execute(
     .clk        (clk),
+    .rst        (rst),
     .pc         (pc),
     .dnpc       (dnpc),
     .inst_valid (inst_valid | rst),
@@ -111,7 +123,25 @@ EXU inst_execute(
     .opcode     (opcode),
     .func3      (func3),
     .gpr_wdata        (gpr_wdata),
-    //.gpr_waddr        (gpr_waddr),
+
+
+    .mastatus_rdata (mastatus_rdata),
+    .mtvec_rdata    (mtvec_rdata),
+    .mepc_rdata     (mepc_rdata),
+    .mcause_rdata   (mcause_rdata),
+    .mastatus_wdata (mastatus_wdata),
+    .mtvec_wdata    (mtvec_wdata),
+
+    .mcause_wdata   (mcause_wdata),
+
+    .wen_mastatus  ( wen_mastatus),
+    .wen_mtvec     ( wen_mtvec),
+    .wen_mepc      ( wen_mepc),
+    .wen_mcause    ( wen_mcause),
+    //.wen_mastatus  ( wen_mastatus),
+
+
+
     .gpr_raddr       ( gpr_raddr),
     .gpr_rdata       ( gpr_rdata),
     .mem_wdata  (mem_wdata),
@@ -120,14 +150,35 @@ EXU inst_execute(
     .mem_raddr  (mem_raddr),
     .wmask      (wmask),
     .rmask      (rmask),
-    .rd        (gpr_waddr)        
+    .rd        (gpr_waddr),
+    .mepc_wdata  (mepc_wdata)        
     
     
 );
 
+wire [31:0] mtvec_wdata;
+wire [31:0] mastatus_wdata;
+wire [31:0] mcause_wdata;
+//wire [31:0] mepc_wdata;
+
 GPR gpr(
     .clk        (clk),
-    .wen        (gpr_wen),
+    .rst        (rst),
+    .gpr_wen        (gpr_wen),
+    .wen_mastatus (wen_mastatus),
+    .wen_mtvec   (wen_mtvec),
+    .wen_mepc     (wen_mepc),   
+    .wen_mcause   (wen_mcause),
+
+    .mepc_wdata  (mepc_wdata),
+    .mtvec_rdata (mtvec_rdata),
+    .mastatus_rdata (mastatus_rdata),
+    .mcause_rdata (mcause_rdata),
+    .mastatus_wdata (mastatus_wdata),
+    .mcause_wdata (mcause_wdata),
+    .mtvec_wdata (mtvec_wdata),
+    .mepc_rdata  (mepc_rdata),
+
     .wdata      (gpr_wdata),
     .waddr      (gpr_waddr),
     .rdata1     (rdata1),
@@ -135,7 +186,7 @@ GPR gpr(
     .raddr1     (raddr1),
     .raddr2     (raddr2),
     .x10        (x10)
-    
+
 );
 
 

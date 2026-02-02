@@ -49,9 +49,9 @@ extern void difftest_step(uint32_t npc_pc, void *npc_regs);
 void cpu_exec(uint64_t n) {
     for (uint64_t i = 0; i < n; i++) {
         single_step();
-        #ifdef CONFIG_DIFFTEST
+        //#ifdef CONFIG_DIFFTEST
         difftest_step(top_ptr->pc, NULL);
-        #endif
+        //#endif
     }
 }
 

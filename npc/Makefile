@@ -4,10 +4,10 @@ NEMU_HOME = $(abspath ../nemu)
 AM_HOME = $(abspath ../am-kernels)
 
 
-TEST_NAME ?= dummy
+#TEST_NAME ?= dummy
 
 
-IMAGE_FILE = $(AM_HOME)/tests/cpu-tests/build/$(TEST_NAME)-riscv32e-npc.bin
+IMG = $(AM_HOME)/tests/cpu-tests/build/$(TEST_NAME)-riscv32e-npc.bin
 ELF_FILE   = $(AM_HOME)/tests/cpu-tests/build/$(TEST_NAME)-riscv32e-npc.elf
 DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 
@@ -65,7 +65,7 @@ menuconfig:
 	@$(MAKE) $(AUTOCONF_H)
 
 run: $(BIN)
-	$(BIN) $(IMAGE_FILE) $(DIFF_REF_SO) $(ELF_FILE)
+	$(BIN) $(IMG) $(DIFF_REF_SO) $(ELF_FILE)
 clean:
 	rm -rf $(BUILD_DIR)
 

@@ -4,4 +4,4 @@
  * YSYX NPC Configuration System
  *
  */
-#define CONFIG_FTRACE 1
+#define CONFIG_DIFFTEST 1

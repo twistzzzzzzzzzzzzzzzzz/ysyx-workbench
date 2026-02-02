@@ -61,7 +61,7 @@ bool isa_difftest_checkregs(NPC_State *ref, uint32_t pc) {
         printf("Actual   (NPC) : 0x%08x\n", pc);
         return false;
     }else {
-				printf("[Difftest] PC Match: 0x%08x\n", pc);
+				//printf("[Difftest] PC Match: 0x%08x\n", pc);
 		}
 
     // 2. 检查 32 个通用寄存器
@@ -72,7 +72,7 @@ bool isa_difftest_checkregs(NPC_State *ref, uint32_t pc) {
             printf("Actual   (NPC) : 0x%08x\n", cpu_gpr[i]);
             return false;
         }else {
-				printf("[Difftest_GPR] DUT[%d]: 0x%08x VS REF[%d]:0x%08x\n", i, cpu_gpr[i], i, ref->gpr[i]);
+				//printf("/[Difftest_GPR] DUT[%d]: 0x%08x VS REF[%d]:0x%08x\n", i, cpu_gpr[i], i, ref->gpr[i]);
     }
 	}
 	 return true;
@@ -80,8 +80,26 @@ bool isa_difftest_checkregs(NPC_State *ref, uint32_t pc) {
 
 
 
+static bool is_skip_ref = false;
+void difftest_skip_ref() {
+  is_skip_ref = true;
+}
+
 void difftest_step(uint32_t npc_pc, void *npc_regs) {
-	printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
+	// printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
+
+    if (is_skip_ref) {
+        if (ref_difftest_regcpy) {
+            NPC_State dut_r;
+            dut_r.pc = npc_pc;
+            for (int i = 0; i < 32; i++) {
+                dut_r.gpr[i] = cpu_gpr[i];
+            }
+            ref_difftest_regcpy(&dut_r, true);
+        }
+        is_skip_ref = false;
+        return;
+    }
 
     NPC_State ref_r; 
 

@@ -1,5 +1,6 @@
 module EXU(
     input    clk,
+    input    rst,
     input [31:0] pc,
     input [31:0] inst,
     input [31:0] imm,
@@ -10,8 +11,31 @@ module EXU(
     input [2:0] func3,
     input inst_valid,
     input [4:0] rd,
+
+
+    input [31:0] mastatus_rdata,
+    input [31:0] mtvec_rdata,
+    input [31:0] mepc_rdata,
+    input [31:0] mcause_rdata,
+
+    output reg [31:0] mastatus_wdata,
+    output reg [31:0] mtvec_wdata,
+    output reg [31:0] mepc_wdata,
+    output reg [31:0] mcause_wdata,
+
+
+
     output reg [31:0] dnpc,
     output reg [31:0] gpr_wdata,
+    
+    
+    //output reg [1:0] csr_wen,
+    output reg wen_mtvec,
+    output reg wen_mepc,
+    output reg wen_mcause,
+        output reg wen_mastatus,
+
+
     // output reg [4:0] gpr_waddr,
     output reg [4:0] gpr_raddr,
     output reg [31:0] gpr_rdata,
@@ -32,7 +56,9 @@ import "DPI-C" function void log_ftrace(
 );
 
 
-
+reg [31:0] snpc;
+reg [31:0] alu_res;
+reg [31:0] tmp;
 
 always @(posedge clk) begin
     
@@ -52,8 +78,6 @@ end
 
 always @(*) begin
 
-reg [31:0] snpc;
-reg [31:0] alu_res;
 
 alu_res = 32'b0;
 gpr_wdata = 32'b0; // 防止产生 Latch
@@ -63,15 +87,82 @@ mem_raddr = 32'b0;
 wmask = 4'b0000;
 rmask = 4'b0000;
 
+mastatus_wdata = 0;
+mcause_wdata = 0;
+
+wen_mastatus = 0;
+wen_mtvec = 0;
+wen_mepc = 0;
+wen_mcause = 0;
 
 snpc = pc + 4;
 dnpc = snpc;
 
-if (!inst_valid) begin
-         invalid_inst_trap(pc, inst);
+
+
+
+
+
+//ecall
+
+if (inst == 32'b 0000000_00000_00000_000_00000_1110011)
+ begin 
+    mepc_wdata = pc + 4; 
+    dnpc = mtvec_rdata; 
+    mcause_wdata = 32'h0b;
+    wen_mcause = 1;
+    wen_mepc = 1; 
+ end
+
+
+if (inst == 32'h30200073) begin
+    dnpc = mepc_rdata;
+end
+
+//csrrw
+if ((opcode == 7'b1110011) && (func3 == 3'b001))
+    begin   
+        case (imm)
+                32'h300: begin tmp = mastatus_rdata; end
+                32'h305: begin tmp = mtvec_rdata; end
+                32'h341: begin tmp = mepc_rdata; end
+                32'h342: begin tmp = mcause_rdata; end
+                default: begin tmp = 32'b0 ;end
+            endcase 
+                alu_res = tmp;
+                gpr_wdata = alu_res;
+            case (imm)
+                32'h300:begin  mastatus_wdata = rs1; wen_mastatus = 1;end
+                32'h305: begin mtvec_wdata = rs1;    wen_mtvec = 1;end
+                32'h341: begin mepc_wdata = rs1;     wen_mepc = 1;end 
+                32'h342: begin mcause_wdata = rs1;   wen_mcause = 1;end
+                default: mcause_wdata = rs1 ;
+            endcase
+    end
+
+//cssrs
+if ((opcode == 7'b1110011) && (func3 == 3'b010))
+    begin
+        case (imm)
+            32'h300: begin tmp = mastatus_rdata; end
+            32'h305: begin tmp = mtvec_rdata; end
+            32'h341: begin tmp = mepc_rdata ;end
+            32'h342: begin tmp = mcause_rdata; end
+            default: begin tmp = 32'b0 ;end
+        endcase 
+            alu_res = tmp;
+            gpr_wdata = alu_res;
+        case (imm)
+            32'h300: begin  mastatus_wdata = rs1 | tmp; wen_mastatus = 1; end
+            32'h305: begin mtvec_wdata = rs1|tmp;wen_mtvec =1; end
+            32'h341: begin mepc_wdata = rs1|tmp; wen_mepc = 1; end
+            32'h342: begin mcause_wdata = rs1|tmp; wen_mcause =1; end
+        endcase
     end
 
 
+//ebreak
+if (opcode == 7'b1110011 && func3 == 3'b000 && inst[20] == 1) begin ebreak(); end
 //addi
 if (opcode == 7'b0010011 && func3 == 3'b000)begin alu_res = rs1 + imm; gpr_wdata = alu_res; end
 //xori
@@ -294,5 +385,4 @@ if (opcode == 7'b0000011 && func3 == 3'b101) begin
 
 end
 end
-
 endmodule

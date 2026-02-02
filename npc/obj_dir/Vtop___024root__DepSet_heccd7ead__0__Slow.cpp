@@ -36,7 +36,6 @@ VL_ATTR_COLD void Vtop___024root___eval_initial__TOP(Vtop___024root* vlSelf) {
     Vtop___024root____Vdpiimwrap_top__DOT__gpr__DOT__set_gpr_ptr__Vdpioc2_TOP(
                                                                               vlSelf->top__DOT__gpr__DOT__x
                                                                               [0U]);
-    VL_WRITEF("Verilog side: GPR pointer sent to C.\n");
 }
 
 VL_ATTR_COLD void Vtop___024root___eval_final(Vtop___024root* vlSelf) {
@@ -97,7 +96,6 @@ VL_ATTR_COLD void Vtop___024root___dump_triggers__stl(Vtop___024root* vlSelf) {
 #endif  // VL_DEBUG
 
 void Vtop___024root____Vdpiimwrap_top__DOT__ram__DOT__pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &rdata, CData/*7:0*/ rmask);
-void Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__invalid_inst_trap_TOP(IData/*31:0*/ pc, IData/*31:0*/ inst);
 void Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__ebreak_TOP();
 
 VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
@@ -123,189 +121,67 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                             | (0x4003U == (0x707fU 
                                            & vlSelf->inst))) 
                            | (0x1003U == (0x707fU & vlSelf->inst))) 
-                          | (0x3013U == (0x707fU & vlSelf->inst))) 
-                         | (0x2013U == (0x707fU & vlSelf->inst))) 
-                        | (0x40005013U == (0xfe00707fU 
-                                           & vlSelf->inst))) 
-                       | (0x7013U == (0x707fU & vlSelf->inst))) 
-                      | (0x6013U == (0x707fU & vlSelf->inst)))))) {
-            if ((1U & (~ ((((((((0x1033U == (0xfe00707fU 
-                                             & vlSelf->inst)) 
-                                | (0x33U == (0xfe00707fU 
-                                             & vlSelf->inst))) 
-                               | (0x40000033U == (0xfe00707fU 
-                                                  & vlSelf->inst))) 
-                              | (0x3033U == (0xfe00707fU 
-                                             & vlSelf->inst))) 
-                             | (0x2033U == (0xfe00707fU 
-                                            & vlSelf->inst))) 
-                            | (0x40005033U == (0xfe00707fU 
+                          | (0x1073U == (0x707fU & vlSelf->inst))) 
+                         | (0x2073U == (0x707fU & vlSelf->inst))) 
+                        | (0x73U == vlSelf->inst)) 
+                       | (0x3013U == (0x707fU & vlSelf->inst))) 
+                      | (0x2013U == (0x707fU & vlSelf->inst)))))) {
+            if ((1U & (~ ((((((((0x40005013U == (0xfe00707fU 
+                                                 & vlSelf->inst)) 
+                                | (0x7013U == (0x707fU 
                                                & vlSelf->inst))) 
-                           | (0x5033U == (0xfe00707fU 
+                               | (0x6013U == (0x707fU 
+                                              & vlSelf->inst))) 
+                              | (0x1033U == (0xfe00707fU 
+                                             & vlSelf->inst))) 
+                             | (0x33U == (0xfe00707fU 
                                           & vlSelf->inst))) 
-                          | (0x4033U == (0xfe00707fU 
+                            | (0x40000033U == (0xfe00707fU 
+                                               & vlSelf->inst))) 
+                           | (0x3033U == (0xfe00707fU 
+                                          & vlSelf->inst))) 
+                          | (0x2033U == (0xfe00707fU 
                                          & vlSelf->inst)))))) {
-                if (((((((((0x6033U == (0xfe00707fU 
-                                        & vlSelf->inst)) 
-                           | (0x7033U == (0xfe00707fU 
-                                          & vlSelf->inst))) 
-                          | (0x17U == (0x7fU & vlSelf->inst))) 
-                         | (0x37U == (0x7fU & vlSelf->inst))) 
-                        | (0x6fU == (0x7fU & vlSelf->inst))) 
-                       | (0x2023U == (0x707fU & vlSelf->inst))) 
-                      | (0x1023U == (0x707fU & vlSelf->inst))) 
-                     | (0x23U == (0x707fU & vlSelf->inst)))) {
-                    if ((0x6033U != (0xfe00707fU & vlSelf->inst))) {
-                        if ((0x7033U != (0xfe00707fU 
-                                         & vlSelf->inst))) {
-                            if ((0x17U != (0x7fU & vlSelf->inst))) {
-                                if ((0x37U != (0x7fU 
-                                               & vlSelf->inst))) {
-                                    if ((0x6fU != (0x7fU 
-                                                   & vlSelf->inst))) {
-                                        vlSelf->top__DOT__mem_wen = 1U;
-                                    }
-                                }
-                            }
+                if ((1U & (~ ((((((((0x40005033U == 
+                                     (0xfe00707fU & vlSelf->inst)) 
+                                    | (0x5033U == (0xfe00707fU 
+                                                   & vlSelf->inst))) 
+                                   | (0x4033U == (0xfe00707fU 
+                                                  & vlSelf->inst))) 
+                                  | (0x6033U == (0xfe00707fU 
+                                                 & vlSelf->inst))) 
+                                 | (0x7033U == (0xfe00707fU 
+                                                & vlSelf->inst))) 
+                                | (0x17U == (0x7fU 
+                                             & vlSelf->inst))) 
+                               | (0x37U == (0x7fU & vlSelf->inst))) 
+                              | (0x6fU == (0x7fU & vlSelf->inst)))))) {
+                    if (((((((((0x2023U == (0x707fU 
+                                            & vlSelf->inst)) 
+                               | (0x1023U == (0x707fU 
+                                              & vlSelf->inst))) 
+                              | (0x23U == (0x707fU 
+                                           & vlSelf->inst))) 
+                             | (0x63U == (0x707fU & vlSelf->inst))) 
+                            | (0x1063U == (0x707fU 
+                                           & vlSelf->inst))) 
+                           | (0x5063U == (0x707fU & vlSelf->inst))) 
+                          | (0x7063U == (0x707fU & vlSelf->inst))) 
+                         | (0x4063U == (0x707fU & vlSelf->inst)))) {
+                        if ((0x2023U == (0x707fU & vlSelf->inst))) {
+                            vlSelf->top__DOT__mem_wen = 1U;
+                        } else if ((0x1023U == (0x707fU 
+                                                & vlSelf->inst))) {
+                            vlSelf->top__DOT__mem_wen = 1U;
+                        } else if ((0x23U == (0x707fU 
+                                              & vlSelf->inst))) {
+                            vlSelf->top__DOT__mem_wen = 1U;
                         }
                     }
                 }
             }
         }
     }
-    vlSelf->top__DOT__inst_valid = (((((((((0x100073U 
-                                            == vlSelf->inst) 
-                                           | (0x13U 
-                                              == (0x707fU 
-                                                  & vlSelf->inst))) 
-                                          | (0x4013U 
-                                             == (0x707fU 
-                                                 & vlSelf->inst))) 
-                                         | (0x67U == 
-                                            (0x7fU 
-                                             & vlSelf->inst))) 
-                                        | (0x5013U 
-                                           == (0xfe00707fU 
-                                               & vlSelf->inst))) 
-                                       | (0x1013U == 
-                                          (0xfe00707fU 
-                                           & vlSelf->inst))) 
-                                      | (0x2003U == 
-                                         (0x707fU & vlSelf->inst))) 
-                                     | (3U == (0x707fU 
-                                               & vlSelf->inst))) 
-                                    | (((((((((0x5003U 
-                                               == (0x707fU 
-                                                   & vlSelf->inst)) 
-                                              | (0x4003U 
-                                                 == 
-                                                 (0x707fU 
-                                                  & vlSelf->inst))) 
-                                             | (0x1003U 
-                                                == 
-                                                (0x707fU 
-                                                 & vlSelf->inst))) 
-                                            | (0x3013U 
-                                               == (0x707fU 
-                                                   & vlSelf->inst))) 
-                                           | (0x2013U 
-                                              == (0x707fU 
-                                                  & vlSelf->inst))) 
-                                          | (0x40005013U 
-                                             == (0xfe00707fU 
-                                                 & vlSelf->inst))) 
-                                         | (0x7013U 
-                                            == (0x707fU 
-                                                & vlSelf->inst))) 
-                                        | (0x6013U 
-                                           == (0x707fU 
-                                               & vlSelf->inst))) 
-                                       | (((((((((0x1033U 
-                                                  == 
-                                                  (0xfe00707fU 
-                                                   & vlSelf->inst)) 
-                                                 | (0x33U 
-                                                    == 
-                                                    (0xfe00707fU 
-                                                     & vlSelf->inst))) 
-                                                | (0x40000033U 
-                                                   == 
-                                                   (0xfe00707fU 
-                                                    & vlSelf->inst))) 
-                                               | (0x3033U 
-                                                  == 
-                                                  (0xfe00707fU 
-                                                   & vlSelf->inst))) 
-                                              | (0x2033U 
-                                                 == 
-                                                 (0xfe00707fU 
-                                                  & vlSelf->inst))) 
-                                             | (0x40005033U 
-                                                == 
-                                                (0xfe00707fU 
-                                                 & vlSelf->inst))) 
-                                            | (0x5033U 
-                                               == (0xfe00707fU 
-                                                   & vlSelf->inst))) 
-                                           | (0x4033U 
-                                              == (0xfe00707fU 
-                                                  & vlSelf->inst))) 
-                                          | (((((((((0x6033U 
-                                                     == 
-                                                     (0xfe00707fU 
-                                                      & vlSelf->inst)) 
-                                                    | (0x7033U 
-                                                       == 
-                                                       (0xfe00707fU 
-                                                        & vlSelf->inst))) 
-                                                   | (0x17U 
-                                                      == 
-                                                      (0x7fU 
-                                                       & vlSelf->inst))) 
-                                                  | (0x37U 
-                                                     == 
-                                                     (0x7fU 
-                                                      & vlSelf->inst))) 
-                                                 | (0x6fU 
-                                                    == 
-                                                    (0x7fU 
-                                                     & vlSelf->inst))) 
-                                                | (0x2023U 
-                                                   == 
-                                                   (0x707fU 
-                                                    & vlSelf->inst))) 
-                                               | (0x1023U 
-                                                  == 
-                                                  (0x707fU 
-                                                   & vlSelf->inst))) 
-                                              | (0x23U 
-                                                 == 
-                                                 (0x707fU 
-                                                  & vlSelf->inst))) 
-                                             | ((0x63U 
-                                                 == 
-                                                 (0x707fU 
-                                                  & vlSelf->inst)) 
-                                                | ((0x1063U 
-                                                    == 
-                                                    (0x707fU 
-                                                     & vlSelf->inst)) 
-                                                   | ((0x5063U 
-                                                       == 
-                                                       (0x707fU 
-                                                        & vlSelf->inst)) 
-                                                      | ((0x7063U 
-                                                          == 
-                                                          (0x707fU 
-                                                           & vlSelf->inst)) 
-                                                         | ((0x4063U 
-                                                             == 
-                                                             (0x707fU 
-                                                              & vlSelf->inst)) 
-                                                            | (0x6063U 
-                                                               == 
-                                                               (0x707fU 
-                                                                & vlSelf->inst)))))))))));
     vlSelf->top__DOT__mem_ren = 0U;
     vlSelf->top__DOT__opcode = 0U;
     vlSelf->top__DOT__func3 = 0U;
@@ -365,167 +241,185 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     } else if (((((((((0x5003U == (0x707fU & vlSelf->inst)) 
                       | (0x4003U == (0x707fU & vlSelf->inst))) 
                      | (0x1003U == (0x707fU & vlSelf->inst))) 
-                    | (0x3013U == (0x707fU & vlSelf->inst))) 
-                   | (0x2013U == (0x707fU & vlSelf->inst))) 
-                  | (0x40005013U == (0xfe00707fU & vlSelf->inst))) 
-                 | (0x7013U == (0x707fU & vlSelf->inst))) 
-                | (0x6013U == (0x707fU & vlSelf->inst)))) {
-        vlSelf->top__DOT__gpr_wen = 1U;
+                    | (0x1073U == (0x707fU & vlSelf->inst))) 
+                   | (0x2073U == (0x707fU & vlSelf->inst))) 
+                  | (0x73U == vlSelf->inst)) | (0x3013U 
+                                                == 
+                                                (0x707fU 
+                                                 & vlSelf->inst))) 
+                | (0x2013U == (0x707fU & vlSelf->inst)))) {
         if ((0x5003U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__gpr_wen = 1U;
             vlSelf->top__DOT__mem_ren = 1U;
             vlSelf->top__DOT__opcode = 3U;
             vlSelf->top__DOT__func3 = 5U;
         } else if ((0x4003U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__gpr_wen = 1U;
             vlSelf->top__DOT__mem_ren = 1U;
             vlSelf->top__DOT__opcode = 3U;
             vlSelf->top__DOT__func3 = 4U;
         } else if ((0x1003U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__gpr_wen = 1U;
             vlSelf->top__DOT__mem_ren = 1U;
             vlSelf->top__DOT__opcode = 3U;
             vlSelf->top__DOT__func3 = 1U;
+        } else if ((0x1073U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__gpr_wen = 1U;
+            vlSelf->top__DOT__mem_ren = 0U;
+            vlSelf->top__DOT__opcode = 0x73U;
+            vlSelf->top__DOT__func3 = 1U;
+        } else if ((0x2073U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__gpr_wen = 1U;
+            vlSelf->top__DOT__mem_ren = 0U;
+            vlSelf->top__DOT__opcode = 0x73U;
+            vlSelf->top__DOT__func3 = 2U;
         } else {
+            if ((0x73U != vlSelf->inst)) {
+                vlSelf->top__DOT__gpr_wen = 1U;
+            }
+            if ((0x73U == vlSelf->inst)) {
+                vlSelf->top__DOT__opcode = 0x73U;
+                vlSelf->top__DOT__func3 = 0U;
+            } else {
+                vlSelf->top__DOT__opcode = 0x13U;
+                vlSelf->top__DOT__func3 = ((0x3013U 
+                                            == (0x707fU 
+                                                & vlSelf->inst))
+                                            ? 3U : 2U);
+            }
+        }
+        vlSelf->top__DOT__inst_decode__DOT__inst_type = 0U;
+    } else if (((((((((0x40005013U == (0xfe00707fU 
+                                       & vlSelf->inst)) 
+                      | (0x7013U == (0x707fU & vlSelf->inst))) 
+                     | (0x6013U == (0x707fU & vlSelf->inst))) 
+                    | (0x1033U == (0xfe00707fU & vlSelf->inst))) 
+                   | (0x33U == (0xfe00707fU & vlSelf->inst))) 
+                  | (0x40000033U == (0xfe00707fU & vlSelf->inst))) 
+                 | (0x3033U == (0xfe00707fU & vlSelf->inst))) 
+                | (0x2033U == (0xfe00707fU & vlSelf->inst)))) {
+        vlSelf->top__DOT__gpr_wen = 1U;
+        if ((0x40005013U == (0xfe00707fU & vlSelf->inst))) {
             vlSelf->top__DOT__opcode = 0x13U;
-            vlSelf->top__DOT__func3 = ((0x3013U == 
-                                        (0x707fU & vlSelf->inst))
-                                        ? 3U : ((0x2013U 
+            vlSelf->top__DOT__func3 = 5U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 0U;
+        } else if ((0x7013U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x13U;
+            vlSelf->top__DOT__func3 = 7U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 0U;
+        } else if ((0x6013U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x13U;
+            vlSelf->top__DOT__func3 = 6U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 0U;
+        } else {
+            vlSelf->top__DOT__opcode = 0x33U;
+            vlSelf->top__DOT__func3 = ((0x1033U == 
+                                        (0xfe00707fU 
+                                         & vlSelf->inst))
+                                        ? 1U : ((0x33U 
                                                  == 
-                                                 (0x707fU 
+                                                 (0xfe00707fU 
                                                   & vlSelf->inst))
-                                                 ? 2U
+                                                 ? 0U
                                                  : 
-                                                ((0x40005013U 
+                                                ((0x40000033U 
                                                   == 
                                                   (0xfe00707fU 
                                                    & vlSelf->inst))
-                                                  ? 5U
+                                                  ? 0U
                                                   : 
-                                                 ((0x7013U 
-                                                   == 
-                                                   (0x707fU 
-                                                    & vlSelf->inst))
-                                                   ? 7U
-                                                   : 6U))));
-        }
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 0U;
-    } else if (((((((((0x1033U == (0xfe00707fU & vlSelf->inst)) 
-                      | (0x33U == (0xfe00707fU & vlSelf->inst))) 
-                     | (0x40000033U == (0xfe00707fU 
-                                        & vlSelf->inst))) 
-                    | (0x3033U == (0xfe00707fU & vlSelf->inst))) 
-                   | (0x2033U == (0xfe00707fU & vlSelf->inst))) 
-                  | (0x40005033U == (0xfe00707fU & vlSelf->inst))) 
-                 | (0x5033U == (0xfe00707fU & vlSelf->inst))) 
-                | (0x4033U == (0xfe00707fU & vlSelf->inst)))) {
-        vlSelf->top__DOT__gpr_wen = 1U;
-        vlSelf->top__DOT__opcode = 0x33U;
-        vlSelf->top__DOT__func3 = ((0x1033U == (0xfe00707fU 
-                                                & vlSelf->inst))
-                                    ? 1U : ((0x33U 
-                                             == (0xfe00707fU 
-                                                 & vlSelf->inst))
-                                             ? 0U : 
-                                            ((0x40000033U 
-                                              == (0xfe00707fU 
-                                                  & vlSelf->inst))
-                                              ? 0U : 
-                                             ((0x3033U 
-                                               == (0xfe00707fU 
-                                                   & vlSelf->inst))
-                                               ? 3U
-                                               : ((0x2033U 
+                                                 ((0x3033U 
                                                    == 
                                                    (0xfe00707fU 
                                                     & vlSelf->inst))
-                                                   ? 2U
-                                                   : 
-                                                  ((0x40005033U 
-                                                    == 
-                                                    (0xfe00707fU 
-                                                     & vlSelf->inst))
-                                                    ? 5U
-                                                    : 
-                                                   ((0x5033U 
-                                                     == 
-                                                     (0xfe00707fU 
-                                                      & vlSelf->inst))
-                                                     ? 5U
-                                                     : 4U)))))));
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
-    } else if (((((((((0x6033U == (0xfe00707fU & vlSelf->inst)) 
-                      | (0x7033U == (0xfe00707fU & vlSelf->inst))) 
-                     | (0x17U == (0x7fU & vlSelf->inst))) 
-                    | (0x37U == (0x7fU & vlSelf->inst))) 
-                   | (0x6fU == (0x7fU & vlSelf->inst))) 
-                  | (0x2023U == (0x707fU & vlSelf->inst))) 
-                 | (0x1023U == (0x707fU & vlSelf->inst))) 
-                | (0x23U == (0x707fU & vlSelf->inst)))) {
-        if ((0x6033U == (0xfe00707fU & vlSelf->inst))) {
-            vlSelf->top__DOT__gpr_wen = 1U;
+                                                   ? 3U
+                                                   : 2U))));
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
+        }
+    } else if (((((((((0x40005033U == (0xfe00707fU 
+                                       & vlSelf->inst)) 
+                      | (0x5033U == (0xfe00707fU & vlSelf->inst))) 
+                     | (0x4033U == (0xfe00707fU & vlSelf->inst))) 
+                    | (0x6033U == (0xfe00707fU & vlSelf->inst))) 
+                   | (0x7033U == (0xfe00707fU & vlSelf->inst))) 
+                  | (0x17U == (0x7fU & vlSelf->inst))) 
+                 | (0x37U == (0x7fU & vlSelf->inst))) 
+                | (0x6fU == (0x7fU & vlSelf->inst)))) {
+        vlSelf->top__DOT__gpr_wen = 1U;
+        if ((0x40005033U == (0xfe00707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x33U;
+            vlSelf->top__DOT__func3 = 5U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
+        } else if ((0x5033U == (0xfe00707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x33U;
+            vlSelf->top__DOT__func3 = 5U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
+        } else if ((0x4033U == (0xfe00707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x33U;
+            vlSelf->top__DOT__func3 = 4U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
+        } else if ((0x6033U == (0xfe00707fU & vlSelf->inst))) {
             vlSelf->top__DOT__opcode = 0x33U;
             vlSelf->top__DOT__func3 = 6U;
             vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
         } else if ((0x7033U == (0xfe00707fU & vlSelf->inst))) {
-            vlSelf->top__DOT__gpr_wen = 1U;
             vlSelf->top__DOT__opcode = 0x33U;
             vlSelf->top__DOT__func3 = 7U;
             vlSelf->top__DOT__inst_decode__DOT__inst_type = 1U;
+        } else if ((0x17U == (0x7fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x17U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 2U;
+        } else if ((0x37U == (0x7fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x37U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 2U;
         } else {
-            if ((0x17U == (0x7fU & vlSelf->inst))) {
-                vlSelf->top__DOT__gpr_wen = 1U;
-                vlSelf->top__DOT__opcode = 0x17U;
-                vlSelf->top__DOT__inst_decode__DOT__inst_type = 2U;
-            } else if ((0x37U == (0x7fU & vlSelf->inst))) {
-                vlSelf->top__DOT__gpr_wen = 1U;
-                vlSelf->top__DOT__opcode = 0x37U;
-                vlSelf->top__DOT__inst_decode__DOT__inst_type = 2U;
-            } else if ((0x6fU == (0x7fU & vlSelf->inst))) {
-                vlSelf->top__DOT__gpr_wen = 1U;
-                vlSelf->top__DOT__opcode = 0x6fU;
-                vlSelf->top__DOT__inst_decode__DOT__inst_type = 4U;
-            } else {
-                vlSelf->top__DOT__opcode = 0x23U;
-                vlSelf->top__DOT__inst_decode__DOT__inst_type = 5U;
-            }
-            if ((0x17U != (0x7fU & vlSelf->inst))) {
-                if ((0x37U != (0x7fU & vlSelf->inst))) {
-                    if ((0x6fU != (0x7fU & vlSelf->inst))) {
-                        vlSelf->top__DOT__func3 = (
-                                                   (0x2023U 
-                                                    == 
-                                                    (0x707fU 
-                                                     & vlSelf->inst))
-                                                    ? 2U
-                                                    : 
-                                                   ((0x1023U 
-                                                     == 
-                                                     (0x707fU 
-                                                      & vlSelf->inst))
-                                                     ? 1U
-                                                     : 0U));
-                    }
-                }
-            }
+            vlSelf->top__DOT__opcode = 0x6fU;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 4U;
         }
-    } else if ((0x63U == (0x707fU & vlSelf->inst))) {
-        vlSelf->top__DOT__opcode = 0x63U;
-        vlSelf->top__DOT__func3 = 0U;
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
-    } else if ((0x1063U == (0x707fU & vlSelf->inst))) {
-        vlSelf->top__DOT__opcode = 0x63U;
-        vlSelf->top__DOT__func3 = 1U;
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
-    } else if ((0x5063U == (0x707fU & vlSelf->inst))) {
-        vlSelf->top__DOT__opcode = 0x63U;
-        vlSelf->top__DOT__func3 = 5U;
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
-    } else if ((0x7063U == (0x707fU & vlSelf->inst))) {
-        vlSelf->top__DOT__opcode = 0x63U;
-        vlSelf->top__DOT__func3 = 7U;
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
-    } else if ((0x4063U == (0x707fU & vlSelf->inst))) {
-        vlSelf->top__DOT__opcode = 0x63U;
-        vlSelf->top__DOT__func3 = 4U;
-        vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
+    } else if (((((((((0x2023U == (0x707fU & vlSelf->inst)) 
+                      | (0x1023U == (0x707fU & vlSelf->inst))) 
+                     | (0x23U == (0x707fU & vlSelf->inst))) 
+                    | (0x63U == (0x707fU & vlSelf->inst))) 
+                   | (0x1063U == (0x707fU & vlSelf->inst))) 
+                  | (0x5063U == (0x707fU & vlSelf->inst))) 
+                 | (0x7063U == (0x707fU & vlSelf->inst))) 
+                | (0x4063U == (0x707fU & vlSelf->inst)))) {
+        if ((0x2023U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x23U;
+            vlSelf->top__DOT__func3 = 2U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 5U;
+        } else if ((0x1023U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x23U;
+            vlSelf->top__DOT__func3 = 1U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 5U;
+        } else if ((0x23U == (0x707fU & vlSelf->inst))) {
+            vlSelf->top__DOT__opcode = 0x23U;
+            vlSelf->top__DOT__func3 = 0U;
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 5U;
+        } else {
+            vlSelf->top__DOT__opcode = 0x63U;
+            vlSelf->top__DOT__func3 = ((0x63U == (0x707fU 
+                                                  & vlSelf->inst))
+                                        ? 0U : ((0x1063U 
+                                                 == 
+                                                 (0x707fU 
+                                                  & vlSelf->inst))
+                                                 ? 1U
+                                                 : 
+                                                ((0x5063U 
+                                                  == 
+                                                  (0x707fU 
+                                                   & vlSelf->inst))
+                                                  ? 5U
+                                                  : 
+                                                 ((0x7063U 
+                                                   == 
+                                                   (0x707fU 
+                                                    & vlSelf->inst))
+                                                   ? 7U
+                                                   : 4U))));
+            vlSelf->top__DOT__inst_decode__DOT__inst_type = 6U;
+        }
     } else if ((0x6063U == (0x707fU & vlSelf->inst))) {
         vlSelf->top__DOT__opcode = 0x63U;
         vlSelf->top__DOT__func3 = 6U;
@@ -613,8 +507,10 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         vlSelf->top__DOT__gpr_waddr = (0x1fU & (vlSelf->inst 
                                                 >> 7U));
     }
-    if ((1U & (~ ((IData)(vlSelf->rst) | (IData)(vlSelf->top__DOT__inst_valid))))) {
-        Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__invalid_inst_trap_TOP(vlSelf->pc, vlSelf->inst);
+    if ((((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
+          & (0U == (IData)(vlSelf->top__DOT__func3))) 
+         & (vlSelf->inst >> 0x14U))) {
+        Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__ebreak_TOP();
     }
     if ((((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
           & (0U == (IData)(vlSelf->top__DOT__func3))) 
@@ -627,6 +523,65 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->rdata2 = ((0U == (IData)(vlSelf->top__DOT__raddr2))
                        ? 0U : vlSelf->top__DOT__gpr__DOT__x
                       [vlSelf->top__DOT__raddr2]);
+    vlSelf->top__DOT__wen_mtvec = 0U;
+    vlSelf->top__DOT__wen_mastatus = 0U;
+    vlSelf->top__DOT__wen_mcause = 0U;
+    if ((0x73U == vlSelf->inst)) {
+        vlSelf->top__DOT__wen_mcause = 1U;
+    }
+    if (((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
+         & (1U == (IData)(vlSelf->top__DOT__func3)))) {
+        if ((0x300U != vlSelf->imm)) {
+            if ((0x305U == vlSelf->imm)) {
+                vlSelf->top__DOT__wen_mtvec = 1U;
+            }
+            if ((0x305U != vlSelf->imm)) {
+                if ((0x341U != vlSelf->imm)) {
+                    if ((0x342U == vlSelf->imm)) {
+                        vlSelf->top__DOT__wen_mcause = 1U;
+                    }
+                }
+            }
+        }
+        if ((0x300U == vlSelf->imm)) {
+            vlSelf->top__DOT__wen_mastatus = 1U;
+        }
+    }
+    vlSelf->top__DOT__wen_mepc = 0U;
+    if ((0x73U == vlSelf->inst)) {
+        vlSelf->top__DOT__wen_mepc = 1U;
+    }
+    if (((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
+         & (1U == (IData)(vlSelf->top__DOT__func3)))) {
+        if ((0x300U != vlSelf->imm)) {
+            if ((0x305U != vlSelf->imm)) {
+                if ((0x341U == vlSelf->imm)) {
+                    vlSelf->top__DOT__wen_mepc = 1U;
+                }
+            }
+        }
+    }
+    if (((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
+         & (2U == (IData)(vlSelf->top__DOT__func3)))) {
+        if ((0x300U != vlSelf->imm)) {
+            if ((0x305U == vlSelf->imm)) {
+                vlSelf->top__DOT__wen_mtvec = 1U;
+            }
+            if ((0x305U != vlSelf->imm)) {
+                if ((0x341U != vlSelf->imm)) {
+                    if ((0x342U == vlSelf->imm)) {
+                        vlSelf->top__DOT__wen_mcause = 1U;
+                    }
+                }
+                if ((0x341U == vlSelf->imm)) {
+                    vlSelf->top__DOT__wen_mepc = 1U;
+                }
+            }
+        }
+        if ((0x300U == vlSelf->imm)) {
+            vlSelf->top__DOT__wen_mastatus = 1U;
+        }
+    }
 }
 
 void Vtop___024root___act_sequent__TOP__0(Vtop___024root* vlSelf);
@@ -643,21 +598,6 @@ VL_ATTR_COLD void Vtop___024root___eval_stl(Vtop___024root* vlSelf) {
         Vtop___024root___act_sequent__TOP__0(vlSelf);
     }
 }
-
-#ifdef VL_DEBUG
-VL_ATTR_COLD void Vtop___024root___dump_triggers__ico(Vtop___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vtop__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop___024root___dump_triggers__ico\n"); );
-    // Body
-    if ((1U & (~ (IData)(vlSelf->__VicoTriggered.any())))) {
-        VL_DBG_MSGF("         No triggers active\n");
-    }
-    if (vlSelf->__VicoTriggered.at(0U)) {
-        VL_DBG_MSGF("         'ico' region trigger index 0 is active: Internal 'ico' trigger - first iteration\n");
-    }
-}
-#endif  // VL_DEBUG
 
 #ifdef VL_DEBUG
 VL_ATTR_COLD void Vtop___024root___dump_triggers__act(Vtop___024root* vlSelf) {
@@ -720,18 +660,30 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__mem_ren = 0;
     vlSelf->top__DOT__raddr1 = 0;
     vlSelf->top__DOT__raddr2 = 0;
-    vlSelf->top__DOT__inst_valid = 0;
     vlSelf->top__DOT__opcode = 0;
     vlSelf->top__DOT__func3 = 0;
     vlSelf->top__DOT__gpr_waddr = 0;
+    vlSelf->top__DOT__wen_mtvec = 0;
+    vlSelf->top__DOT__wen_mepc = 0;
+    vlSelf->top__DOT__wen_mcause = 0;
+    vlSelf->top__DOT__wen_mastatus = 0;
+    vlSelf->top__DOT__mepc_wdata = 0;
+    vlSelf->top__DOT__mastatus_wdata = 0;
+    vlSelf->top__DOT__mcause_wdata = 0;
+    vlSelf->top__DOT__mtvec_wdata = 0;
     vlSelf->top__DOT__ram__DOT__inst_temp = 0;
     vlSelf->top__DOT__ram__DOT__rdata_temp = 0;
     vlSelf->top__DOT__inst_decode__DOT__inst_type = 0;
-    vlSelf->top__DOT__inst_execute__DOT__unnamedblk1__DOT__snpc = 0;
-    vlSelf->top__DOT__inst_execute__DOT__unnamedblk1__DOT__alu_res = 0;
+    vlSelf->top__DOT__inst_execute__DOT__snpc = 0;
+    vlSelf->top__DOT__inst_execute__DOT__alu_res = 0;
+    vlSelf->top__DOT__inst_execute__DOT__tmp = 0;
     for (int __Vi0 = 0; __Vi0 < 32; ++__Vi0) {
         vlSelf->top__DOT__gpr__DOT__x[__Vi0] = 0;
     }
+    vlSelf->top__DOT__gpr__DOT__mepc = 0;
+    vlSelf->top__DOT__gpr__DOT__mtvec = 0;
+    vlSelf->top__DOT__gpr__DOT__mcause = 0;
+    vlSelf->top__DOT__gpr__DOT__mastatus = 0;
     vlSelf->__Vtask_top__DOT__ram__DOT__pmem_read__0__rdata = 0;
     vlSelf->__Vtask_top__DOT__ram__DOT__pmem_read__1__rdata = 0;
     vlSelf->__Vtrigrprev__TOP__top__DOT__ram__DOT__rdata_temp = 0;

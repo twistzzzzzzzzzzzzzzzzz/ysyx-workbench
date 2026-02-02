@@ -98,6 +98,10 @@ void single_step() {
     top_ptr->clk = 1;
     top_ptr->eval();
     contextp->timeInc(1);
+    
+    // Debug print
+    //printf("PC=%08x INST=%08x\n", top_ptr->pc, top_ptr->inst);
+
     // if(tfp) tfp->dump(contextp->time()); // 如果有波形就记录
 
     // 2. 上升沿 -> 下降沿 (准备下一次触发)

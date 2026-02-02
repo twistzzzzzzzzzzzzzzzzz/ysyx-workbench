@@ -5,6 +5,7 @@ module IDU(
     output reg mem_wen,
     output reg mem_ren,
     output reg gpr_ren,
+    
     output reg [31:0] imm,
     output reg [4:0] rs1,
     output reg [4:0] rs2, 
@@ -24,7 +25,6 @@ parameter U_TYPE = 3'b010;
 parameter J_TYPE = 3'b100;
 parameter S_TYPE = 3'b101;
 parameter B_TYPE = 3'b110;
-
 
 
 
@@ -71,6 +71,16 @@ always @ (*)begin
     32'b???????_?????_?????_100_?????_0000011: begin inst_valid = 1'b1; gpr_wen = 1'b1; mem_ren = 1'b1; inst_type = 3'b000; opcode = 7'b0000011; func3 = 3'b100; end
 //lh
     32'b???????_?????_?????_001_?????_0000011: begin inst_valid = 1'b1; gpr_wen = 1'b1; mem_ren = 1'b1; inst_type = 3'b000; opcode = 7'b0000011; func3 = 3'b001; end
+
+//csrrw
+    32'b???????_?????_?????_001_?????_1110011: begin inst_valid = 1'b1; gpr_wen = 1'b1; mem_ren = 1'b0; inst_type = 3'b000; opcode = 7'b1110011; func3 = 3'b001; end
+
+//cssrs
+    32'b???????_?????_?????_010_?????_1110011: begin inst_valid = 1'b1; gpr_wen = 1'b1; mem_ren = 1'b0; inst_type = 3'b000; opcode = 7'b1110011; func3 = 3'b010; end
+//ecall
+    32'b0000000_00000_00000_000_00000_1110011: begin inst_valid = 1'b1; inst_type = 3'b000; opcode = 7'b1110011; func3 = 3'b000; end
+
+
 
 
 

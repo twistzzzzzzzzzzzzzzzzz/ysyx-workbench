@@ -19,6 +19,7 @@ uint8_t pmem[MEM_SIZE];
 
 extern Vtop* top_ptr;
 extern uint32_t *cpu_gpr;
+extern void difftest_skip_ref();
 
 
 static uint64_t boot_time = 0;
@@ -66,6 +67,7 @@ extern "C" uint32_t paddr_read(uint32_t addr, int len) {
 extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
   
    if (raddr == RTC_ADDR || raddr == RTC_ADDR + 4) {
+    difftest_skip_ref();
     uint64_t us = get_time_internal();
     if (raddr == RTC_ADDR) {
       *rdata = (uint32_t)us;
@@ -76,6 +78,7 @@ extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
   }
 
   if (raddr < MEM_BASE || raddr >= MEM_BASE + MEM_SIZE) {
+      difftest_skip_ref();
       *rdata = 0;
       return;
   }
@@ -99,11 +102,16 @@ extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
 // 4. DPI-C 写内存 (供 Verilog 调用)
 extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   if (waddr == SERIAL_PORT) {
-      putchar((char)wdata);
+      difftest_skip_ref();
+      fputc((char)wdata, stdout); 
+      fflush(stdout);
       return;
   }
 
-  if (waddr < MEM_BASE || waddr >= MEM_BASE + MEM_SIZE) return;
+  if (waddr < MEM_BASE || waddr >= MEM_BASE + MEM_SIZE) {
+      difftest_skip_ref();
+      return;
+  }
 
   uint32_t index = waddr - MEM_BASE;
   uint8_t *p = (uint8_t *)(pmem + index);

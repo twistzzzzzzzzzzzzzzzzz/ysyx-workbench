@@ -8,7 +8,8 @@ Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
-      default: ev.event = EVENT_ERROR; break;
+      case 11: ev.event = EVENT_YIELD; break;
+      default: ev.event = EVENT_ERROR; printf("Unhandled mcause: %x, mepc: %x, mstatus: %x\n", c->mcause, c->mepc, c->mstatus); break;
     }
 
     c = user_handler(ev, c);
@@ -31,9 +32,14 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
-}
 
+  Context *c = kstack.end - sizeof(Context);
+
+  c->mepc = (uintptr_t)entry;
+
+  c->gpr[10] = (uintptr_t)arg; // a0
+  return c;
+}
 void yield() {
 #ifdef __riscv_e
   asm volatile("li a5, -1; ecall");
