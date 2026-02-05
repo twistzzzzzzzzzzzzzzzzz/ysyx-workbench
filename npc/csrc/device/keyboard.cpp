@@ -6,25 +6,40 @@
 #include "svdpi.h"
 #include "Vtop__Dpi.h"
 #include "verilated_dpi.h"
+
+
 #define KEY_QUEUE_LEN 1024
 extern Vtop* top_ptr;
+
+extern VerilatedContext* contextp;
+
 // 模拟一个键盘内部的队列或寄存器
 static uint32_t key_queue[KEY_QUEUE_LEN]; 
 static int head = 0, tail = 0;
 
 
 extern "C" uint32_t keyboard_read() {
+    static uint64_t last_sync_time = 0;
+    static uint32_t cached_key = 0;
+    uint64_t current_time = contextp->time();
+
+    // 如果在同一个仿真时间内重复读取，返回上一次缓存的值，不移动 head 指针
+    if (current_time == last_sync_time) {
+        return cached_key;
+    }
+
+    // 真正的弹出逻辑
     uint32_t k = 0;
     if (head != tail) {
         k = key_queue[head];
         head = (head + 1) % KEY_QUEUE_LEN;
-          printf("a5 = 0x%08x\n", top_ptr->x15);
-         printf("C++ side: read keycode 0x%08x from queue\n", k);
+        //printf("C++ side: read keycode 0x%08x from queue at time %lu\n", k, current_time);
     }
+
+    last_sync_time = current_time;
+    cached_key = k;
     return k;
 }
-
-
 
 
 // 这个函数需要你在 main 循环中调用，用来同步 SDL 事件
