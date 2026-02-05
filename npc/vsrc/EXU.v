@@ -299,9 +299,6 @@ if (opcode == 7'b0000011 && func3 == 3'b010) begin
     rmask = 4'b1111; 
     mem_raddr = {alu_res[31:2], 2'b00}; 
     gpr_wdata = mem_rdata; // Fix: Assign memory data to GPR
-//   if (mem_raddr == 32'ha0000060) begin
-//        $display("[EXU-Check] mem_rdata is %x, gpr_wdata becomes %x", mem_rdata, gpr_wdata);
-//      end
  end
 
 //lb

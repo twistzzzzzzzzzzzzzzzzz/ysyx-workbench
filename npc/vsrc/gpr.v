@@ -81,6 +81,7 @@ end
   	always @(posedge clk) begin
 		if (gpr_wen && (waddr != 5'b0)) begin
       		x[waddr] <= wdata;
+			//$display("[WB] Time:%t | Reg[%d] <- %h", $time, waddr, wdata);
     	end
 		
 //   if (gpr_wen && waddr == 5'd15) begin
