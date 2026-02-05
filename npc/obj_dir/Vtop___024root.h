@@ -18,13 +18,16 @@ class Vtop___024root final : public VerilatedModule {
     CData/*3:0*/ top__DOT__wmask;
     CData/*3:0*/ top__DOT__rmask;
     CData/*0:0*/ top__DOT__gpr_wen;
+    CData/*0:0*/ top__DOT__gpr_ren;
     CData/*0:0*/ top__DOT__mem_wen;
     CData/*0:0*/ top__DOT__mem_ren;
     CData/*4:0*/ top__DOT__raddr1;
     CData/*4:0*/ top__DOT__raddr2;
+    CData/*0:0*/ top__DOT__inst_valid;
     CData/*6:0*/ top__DOT__opcode;
     CData/*2:0*/ top__DOT__func3;
     CData/*4:0*/ top__DOT__gpr_waddr;
+    CData/*4:0*/ top__DOT__gpr_raddr;
     CData/*0:0*/ top__DOT__wen_mtvec;
     CData/*0:0*/ top__DOT__wen_mepc;
     CData/*0:0*/ top__DOT__wen_mcause;
@@ -37,6 +40,7 @@ class Vtop___024root final : public VerilatedModule {
     VL_OUT(pc,31,0);
     VL_OUT(inst,31,0);
     VL_OUT(x10,31,0);
+    VL_OUT(x15,31,0);
     VL_OUT(rdata1,31,0);
     VL_OUT(rdata2,31,0);
     VL_OUT(imm,31,0);
@@ -45,6 +49,7 @@ class Vtop___024root final : public VerilatedModule {
     IData/*31:0*/ top__DOT__gpr_wdata;
     IData/*31:0*/ top__DOT__mem_waddr;
     IData/*31:0*/ top__DOT__mem_raddr;
+    IData/*31:0*/ top__DOT__gpr_rdata;
     IData/*31:0*/ top__DOT__mepc_wdata;
     IData/*31:0*/ top__DOT__mastatus_wdata;
     IData/*31:0*/ top__DOT__mcause_wdata;
@@ -54,6 +59,10 @@ class Vtop___024root final : public VerilatedModule {
     IData/*31:0*/ top__DOT__inst_execute__DOT__snpc;
     IData/*31:0*/ top__DOT__inst_execute__DOT__alu_res;
     IData/*31:0*/ top__DOT__inst_execute__DOT__tmp;
+    IData/*31:0*/ top__DOT__gpr__DOT__mcycle;
+    IData/*31:0*/ top__DOT__gpr__DOT__mcycleh;
+    IData/*31:0*/ top__DOT__gpr__DOT__mvendorid;
+    IData/*31:0*/ top__DOT__gpr__DOT__marchid;
     IData/*31:0*/ top__DOT__gpr__DOT__mepc;
     IData/*31:0*/ top__DOT__gpr__DOT__mtvec;
     IData/*31:0*/ top__DOT__gpr__DOT__mcause;
@@ -64,6 +73,7 @@ class Vtop___024root final : public VerilatedModule {
     IData/*31:0*/ __VstlIterCount;
     IData/*31:0*/ __VactIterCount;
     VlUnpacked<IData/*31:0*/, 32> top__DOT__gpr__DOT__x;
+    VlUnpacked<CData/*0:0*/, 4> __Vm_traceActivity;
     VlTriggerVec<2> __VstlTriggered;
     VlTriggerVec<2> __VactTriggered;
     VlTriggerVec<2> __VnbaTriggered;

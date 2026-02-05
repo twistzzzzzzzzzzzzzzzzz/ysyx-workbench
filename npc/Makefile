@@ -22,7 +22,7 @@ K_GEN  := $(NEMU_HOME)/scripts/kconfig_gen.py
 
 
 VERILATOR = verilator
-VERILATOR_CFLAGS += -MMD --build -cc  \
+VERILATOR_CFLAGS += -MMD --build -cc  --trace\
 				-O3 --x-assign fast --x-initial fast --noassert \
 				-I$(NPC_HOME)/build/config
 
@@ -33,7 +33,7 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 
 VSRCS = $(shell find ./vsrc -name "*.v")
 CSRCS = $(shell find ./csrc -name "*.cpp")
-LDFLAGS += -lreadline -ldl
+LDFLAGS += -lreadline -ldl -lSDL2
 
 default: $(BIN)
 

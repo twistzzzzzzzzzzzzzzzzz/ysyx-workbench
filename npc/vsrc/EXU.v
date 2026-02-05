@@ -237,7 +237,7 @@ if (opcode == 7'b1101111)begin alu_res = snpc; gpr_wdata = alu_res; dnpc = pc + 
 //jalr
 if (opcode == 7'b1100111 && func3 == 3'b000) begin alu_res = snpc; gpr_wdata = alu_res; dnpc = (rs1 + imm) & ~32'b1; end
 //lw
-if (opcode == 7'b0000011 && func3 == 3'b010) begin alu_res = rs1 + imm; gpr_wdata = alu_res; end
+//if (opcode == 7'b0000011 && func3 == 3'b010) begin alu_res = rs1 + imm; gpr_wdata = alu_res; end
 
 /*--------------------store_kind-------------------*/
 
@@ -294,7 +294,15 @@ if (opcode == 7'b0100011 && func3 == 3'b001) begin // 1. 计算内存地址
 /*--------------------load_kind-------------------*/
 
 //lw
-if (opcode == 7'b0000011 && func3 == 3'b010) begin alu_res = rs1 + imm; rmask = 4'b1111; mem_raddr = {alu_res[31:2], 2'b00}; gpr_wdata = mem_rdata; end
+if (opcode == 7'b0000011 && func3 == 3'b010) begin 
+    alu_res = rs1 + imm; 
+    rmask = 4'b1111; 
+    mem_raddr = {alu_res[31:2], 2'b00}; 
+    gpr_wdata = mem_rdata; // Fix: Assign memory data to GPR
+//   if (mem_raddr == 32'ha0000060) begin
+//        $display("[EXU-Check] mem_rdata is %x, gpr_wdata becomes %x", mem_rdata, gpr_wdata);
+//      end
+ end
 
 //lb
 if (opcode == 7'b0000011 && func3 == 3'b000) begin

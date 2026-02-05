@@ -4,7 +4,8 @@
 #include "Vtop__Dpi.h"
 #include "verilated_dpi.h"
 #include <sys/time.h>
-
+#include "device/dev.h"
+#include <../config/autoconf.h>
 
 
 
@@ -14,6 +15,8 @@
 #define DEVICE_BASE 0xa0000000
 #define RTC_ADDR (DEVICE_BASE + 0x00000048)
 #define VGACTL_ADDR (DEVICE_BASE + 0x0000100)
+#define KBD_ADDR        (DEVICE_BASE + 0x00000060)
+#define INPUT_CONF_ADDR (DEVICE_BASE + 0x00000000) // 用于汇报设备存在
 #define SERIAL_PORT (0x10000000)
 uint8_t pmem[MEM_SIZE];
 
@@ -62,12 +65,15 @@ extern "C" uint32_t paddr_read(uint32_t addr, int len) {
     return (uint32_t)data;
 }
 
-
+extern "C" uint32_t keyboard_read();
 // 3. DPI-C 读内存 (供 Verilog 调用)
 extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
-  
+/*-------------------------RTC----------------------*/ 
    if (raddr == RTC_ADDR || raddr == RTC_ADDR + 4) {
+
+    #ifdef CONFIG_DIFFTEST
     difftest_skip_ref();
+    #endif
     uint64_t us = get_time_internal();
     if (raddr == RTC_ADDR) {
       *rdata = (uint32_t)us;
@@ -77,8 +83,38 @@ extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
     return;
   }
 
+
+/*----------------------kbd--------------------*/
+
+// 1. 处理输入设备配置查询 (0xa0000000)
+    if (raddr == 0xa0000000) {
+
+      #ifdef CONFIG_DIFFTEST
+        difftest_skip_ref();
+      #endif
+
+        *rdata = 1; // 告诉软件有键盘
+        return;
+    }
+
+    // 2. 处理键盘数据读取 (0xa0000060)
+    if (raddr == 0xa0000060) {
+
+      #ifdef CONFIG_DIFFTEST
+        difftest_skip_ref();
+
+      #endif
+        *rdata = keyboard_read(); // 直接调用 keyboard.cpp 里的函数
+              //  printf("a5 = 0x%08x\n", top_ptr->x15);
+        return;
+    }
+
+
+
   if (raddr < MEM_BASE || raddr >= MEM_BASE + MEM_SIZE) {
+    #ifdef CONFIG_DIFFTEST
       difftest_skip_ref();
+    #endif 
       *rdata = 0;
       return;
   }
@@ -102,25 +138,24 @@ extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
 // 4. DPI-C 写内存 (供 Verilog 调用)
 extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   if (waddr == SERIAL_PORT) {
+    #ifdef CONFIG_DIFFTEST
       difftest_skip_ref();
+    #endif
       fputc((char)wdata, stdout); 
       fflush(stdout);
       return;
   }
 
   if (waddr < MEM_BASE || waddr >= MEM_BASE + MEM_SIZE) {
+    #ifdef CONFIG_DIFFTEST
       difftest_skip_ref();
+    #endif
       return;
   }
 
   uint32_t index = waddr - MEM_BASE;
   uint8_t *p = (uint8_t *)(pmem + index);
 
- 
-
-  // 根据 wmask 逐字节写入
-  // wmask 的第 0 位对应 wdata 的最低字节 (0-7位)
-  // wmask 的第 1 位对应 wdata 的次低字节 (8-15位) ...
   if (wmask & 0x01) { p[0] = (wdata)       & 0xFF; }
   if (wmask & 0x02) { p[1] = (wdata >> 8)  & 0xFF; }
   if (wmask & 0x04) { p[2] = (wdata >> 16) & 0xFF; }

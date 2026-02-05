@@ -4,11 +4,22 @@ module top(
     output reg [31:0] pc,
     output reg [31:0] inst,
     output wire [31:0] x10,
+    output wire [31:0] x15,
     output wire [31:0] rdata1,
     output wire [31:0] rdata2,
     output wire [31:0] imm
     
 );
+
+
+
+always @(posedge clk) begin
+    if (inst == 32'h00002503) begin // 这是 lw a0, 0(a0) 的指令码，你可以根据实际指令改
+        $display("[Time:%t] PC:%x | GPR_WEN:1 | WADDR:%d | WDATA_FROM_EXU:%x | REAL_MEM_DATA:%x", 
+                 $time, pc, gpr_waddr, gpr_wdata, mem_rdata);
+    end
+end
+
 
 
 wire [31:0] dnpc;
@@ -160,6 +171,7 @@ wire [31:0] mtvec_wdata;
 wire [31:0] mastatus_wdata;
 wire [31:0] mcause_wdata;
 //wire [31:0] mepc_wdata;
+//wire [31:0] final_gpr_wdata = (inst[6:0] == 7'b0000011) ? mem_rdata : gpr_wdata;
 
 GPR gpr(
     .clk        (clk),
@@ -185,8 +197,8 @@ GPR gpr(
     .rdata2     (rdata2),
     .raddr1     (raddr1),
     .raddr2     (raddr2),
-    .x10        (x10)
-
+    .x10        (x10),
+    .x15        (x15)
 );
 
 

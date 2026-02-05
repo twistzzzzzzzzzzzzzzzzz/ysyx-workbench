@@ -22,8 +22,9 @@ module GPR(
 
   	output [31:0] rdata1,
   	output [31:0] rdata2,
-	output [31:0] x10
-
+	output [31:0] x10,
+	output [31:0] x15
+ 
 
 );
 
@@ -73,6 +74,7 @@ end
   	assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : x[raddr2];
 
 	assign x10 = x[10];
+	assign x15 = x[15];
 
 
 	
@@ -80,6 +82,10 @@ end
 		if (gpr_wen && (waddr != 5'b0)) begin
       		x[waddr] <= wdata;
     	end
-  	end
+		
+//   if (gpr_wen && waddr == 5'd15) begin
+//     $display("[RF-Write] x15(a5) gets value: %x", wdata);
+//  end
+end
 
 endmodule

@@ -22,6 +22,8 @@ module MEM(
     input ren
 );
 
+
+
   /* ---------------- DPI-C 接口 ---------------- */
     // 读内存函数
     import "DPI-C" function void pmem_read(

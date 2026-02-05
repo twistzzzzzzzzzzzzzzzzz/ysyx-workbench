@@ -1,12 +1,16 @@
 #include "Vtop.h"
 #include "verilated.h"
 #include <stdio.h>
-//#include "verilated_vcd_c.h"
+#include "verilated_vcd_c.h"
 #include "svdpi.h"
 #include "Vtop__Dpi.h"
 #include <sys/time.h>
-#include <../config/autoconf.h> 
+//#include <../config/autoconf.h> 
 #include <assert.h> 
+#include "device/dev.h"
+#include "../config/autoconf.h"
+
+
 
 // 1. 定义内存
 #define MEM_SIZE (64 * 1024 * 1024) // 64 MB
@@ -21,6 +25,7 @@ extern uint8_t pmem[];
 //global ptr
 Vtop *top_ptr = NULL;
 uint32_t *cpu_gpr = NULL;
+VerilatedVcdC *tfp = NULL;
 
 // 在 sim_main.cpp 中保留声明即可
 extern void difftest_step(uint32_t npc_pc);
@@ -70,11 +75,11 @@ extern "C" void ebreak(){
   
   if(a0 == 0) {
       printf("\033[1;32mHit good trap\033[0m\n"); // 绿色
-      //if(tfp) tfp->close();
+      if(tfp) tfp->close();
       exit(0);
   } else {
       printf("\033[1;31mHit bad trap (exit code = %d)\033[0m\n", a0); // 红色
-      //if(tfp) tfp->close();
+      if(tfp) tfp->close();
       exit(1);
   }
 }
@@ -94,7 +99,9 @@ VerilatedContext* contextp = NULL;
 void single_step() {
     if (top_ptr == NULL || contextp == NULL) return;
 
-    // 1. 下降沿 -> 上升沿 (触发硬件寄存器更新)
+    // 1. 下降沿 -> 上升沿 (触发硬件寄存器更新) // 假设你的寄存器堆数组叫 gpr，a5 对应 RISC-V 的 x15
+  
+    update_keyboard_state();
     top_ptr->clk = 1;
     top_ptr->eval();
     contextp->timeInc(1);
@@ -102,13 +109,13 @@ void single_step() {
     // Debug print
     //printf("PC=%08x INST=%08x\n", top_ptr->pc, top_ptr->inst);
 
-    // if(tfp) tfp->dump(contextp->time()); // 如果有波形就记录
+     if(tfp) tfp->dump(contextp->time()); // 如果有波形就记录
 
     // 2. 上升沿 -> 下降沿 (准备下一次触发)
     top_ptr->clk = 0;
     top_ptr->eval();
     contextp->timeInc(1);
-    // if(tfp) tfp->dump(contextp->time());
+     if(tfp) tfp->dump(contextp->time());
 }
 
 
@@ -117,6 +124,14 @@ void init_sim(int argc, char** argv) {
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv); 
     top_ptr = new Vtop{contextp};
+
+
+    contextp->traceEverOn(true);
+    tfp = new VerilatedVcdC;
+    top_ptr->trace(tfp, 99);
+    tfp->open("npc_dump.vcd"); // 生成的波形文件名
+
+
 
     char *img_file = argv[1];
     char *so_file  = argv[2]; 
@@ -148,6 +163,16 @@ void init_sim(int argc, char** argv) {
         init_ftrace(img_file); 
     }
 #endif
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return ;
+    }
+    SDL_Window *window = SDL_CreateWindow("NPC Simulation", 
+                         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+                         400, 300, SDL_WINDOW_SHOWN);
+
+
 
     // Reset 过程 (保持不变)
     top_ptr->rst = 1;
