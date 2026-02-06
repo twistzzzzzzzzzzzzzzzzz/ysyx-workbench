@@ -1,4 +1,4 @@
-ENTRY(_start)
+ENTRY(_start)/*指明程序执行的第一条指令是_start符号所在的位置*/
 PHDRS { text PT_LOAD; data PT_LOAD; }
 
 SECTIONS {

@@ -8,7 +8,7 @@
 //#include <../config/autoconf.h> 
 #include <assert.h> 
 #include "device/dev.h"
-#include "../config/autoconf.h"
+#include "../include/generated/autoconf.h"
 
 
 
@@ -75,11 +75,15 @@ extern "C" void ebreak(){
   
   if(a0 == 0) {
       printf("\033[1;32mHit good trap\033[0m\n"); // 绿色
+#ifdef CONFIG_WAVE
       if(tfp) tfp->close();
+#endif
       exit(0);
   } else {
       printf("\033[1;31mHit bad trap (exit code = %d)\033[0m\n", a0); // 红色
+#ifdef CONFIG_WAVE
       if(tfp) tfp->close();
+#endif
       exit(1);
   }
 }
@@ -108,14 +112,17 @@ void single_step() {
     
     // Debug print
     //printf("PC=%08x INST=%08x\n", top_ptr->pc, top_ptr->inst);
-
+#ifdef CONFIG_WAVE
      if(tfp) tfp->dump(contextp->time()); // 如果有波形就记录
+#endif
 
     // 2. 上升沿 -> 下降沿 (准备下一次触发)
     top_ptr->clk = 0;
     top_ptr->eval();
     contextp->timeInc(1);
+#ifdef CONFIG_WAVE
      if(tfp) tfp->dump(contextp->time());
+#endif
 }
 
 
@@ -126,10 +133,16 @@ void init_sim(int argc, char** argv) {
     top_ptr = new Vtop{contextp};
 
 
+
+#ifdef CONFIG_WAVE
     contextp->traceEverOn(true);
     tfp = new VerilatedVcdC;
     top_ptr->trace(tfp, 99);
     tfp->open("npc_dump.vcd"); // 生成的波形文件名
+#else
+    // printf("Wave trace is disabled by Kconfig\n");
+#endif
+
 
 
 

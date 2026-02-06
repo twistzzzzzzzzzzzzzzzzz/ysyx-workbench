@@ -22,7 +22,7 @@ extern "C" uint32_t keyboard_read() {
     static uint64_t last_sync_time = 0;
     static uint32_t cached_key = 0;
     uint64_t current_time = contextp->time();
-
+    //保证在一个周期，只返回一次键码，如果多次执行则返回零蛋
     // 如果在同一个仿真时间内重复读取，返回上一次缓存的值，不移动 head 指针
     if (current_time == last_sync_time) {
         return cached_key;

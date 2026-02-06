@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "../utils.h"
-#include "../../config/autoconf.h"
+#include "../../include/generated/autoconf.h"
 
 
 

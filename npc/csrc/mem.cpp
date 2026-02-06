@@ -5,7 +5,7 @@
 #include "verilated_dpi.h"
 #include <sys/time.h>
 #include "device/dev.h"
-#include <../config/autoconf.h>
+#include "../include/generated/autoconf.h"
 
 
 
@@ -104,8 +104,9 @@ extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
         difftest_skip_ref();
 
       #endif
-        *rdata = keyboard_read(); // 直接调用 keyboard.cpp 里的函数
-              //  printf("a5 = 0x%08x\n", top_ptr->x15);
+         *rdata = keyboard_read(); // 直接调用 keyboard.cpp 里的函数
+        //       //  printf("a5 = 0x%08x\n", top_ptr->x15);
+       // *rdata = 0x802c;
         return;
     }
 

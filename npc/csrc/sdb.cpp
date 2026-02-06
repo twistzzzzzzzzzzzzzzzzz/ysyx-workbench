@@ -4,8 +4,7 @@
 #include <string>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <../config/autoconf.h>
-
+#include "../include/generated/autoconf.h"
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 
 
