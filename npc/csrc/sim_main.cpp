@@ -5,7 +5,6 @@
 #include "svdpi.h"
 #include "Vtop__Dpi.h"
 #include <sys/time.h>
-//#include <../config/autoconf.h> 
 #include <assert.h> 
 #include "device/dev.h"
 #include "../include/generated/autoconf.h"
@@ -122,6 +121,12 @@ void single_step() {
     contextp->timeInc(1);
 #ifdef CONFIG_WAVE
      if(tfp) tfp->dump(contextp->time());
+#endif
+
+
+#ifdef CONFIG_ITRACE
+    printf("pc = 0x%08x, inst = 0x%08x\n",top_ptr->pc, top_ptr->inst);
+    
 #endif
 }
 

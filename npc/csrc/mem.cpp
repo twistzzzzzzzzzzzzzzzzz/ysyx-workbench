@@ -44,8 +44,8 @@ extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
     // svGetArrayPtr 在某些版本中可用，但 datap() 是最稳妥的底层拿法
     cpu_gpr = (uint32_t *)(((VerilatedDpiOpenVar*)r)->datap());
     
-    printf("C++ side: GPR pointer received at %p\n", r);
-    printf("C++ side: GPR data actual address at %p\n", cpu_gpr);
+    // printf("C++ side: GPR pointer received at %p\n", r);
+    // printf("C++ side: GPR data actual address at %p\n", cpu_gpr);
 }
 
 

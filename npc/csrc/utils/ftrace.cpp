@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstddef>
+#include <../include/generated/autoconf.h>
 
 typedef struct {
   char name[64];
@@ -113,6 +114,7 @@ static __attribute__((unused)) const char* find_func_name(uint64_t addr) { //告
 }
 
 extern "C" void log_ftrace(int pc, int target, svBit is_return) {
+  //printf("DEBUG: DPI-C Trigggered! PC=0x%08x\n", pc);
     uint32_t u_pc = (uint32_t)pc;
     uint32_t u_target = (uint32_t)target;
     //printf("DEBUG: pc=0x%08x, is_ret=%d\n", pc, is_return);

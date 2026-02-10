@@ -513,11 +513,6 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
          & (vlSelf->inst >> 0x14U))) {
         Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__ebreak_TOP();
     }
-    if ((((0x73U == (IData)(vlSelf->top__DOT__opcode)) 
-          & (0U == (IData)(vlSelf->top__DOT__func3))) 
-         & (vlSelf->inst >> 0x14U))) {
-        Vtop___024root____Vdpiimwrap_top__DOT__inst_execute__DOT__ebreak_TOP();
-    }
     vlSelf->rdata1 = ((0U == (IData)(vlSelf->top__DOT__raddr1))
                        ? 0U : vlSelf->top__DOT__gpr__DOT__x
                       [vlSelf->top__DOT__raddr1]);

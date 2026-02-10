@@ -4,3 +4,4 @@
  * YSYX NPC Configuration System
  *
  */
+#define CONFIG_ITRACE 1

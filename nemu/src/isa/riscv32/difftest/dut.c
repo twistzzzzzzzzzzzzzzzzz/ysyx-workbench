@@ -29,7 +29,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
     printf("Difftest failed at PC = 0x%08x\n", pc);
     return false;
   }
-  printf("Difftest passed at PC = 0x%08x\n", pc);
+  //printf("Difftest passed at PC = 0x%08x\n", pc);
   return true;
 }
 

@@ -42,23 +42,23 @@ f(30) f(31)
 __am_asm_trap:
   addi sp, sp, -CONTEXT_SIZE
 
-  MAP(REGS, PUSH)
+  MAP(REGS, PUSH)//通用寄存器压栈
 
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
 
-  STORE t0, OFFSET_CAUSE(sp)
+  STORE t0, OFFSET_CAUSE(sp) //将t0的值存到sp指针往下OFFSET_CAUSE的栈中
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
 
-  # set mstatus.MPRV to pass difftest
+  # set mstatus.MPRV to pass difftest 将mstatus的第十七位强制修改为1
   li a0, (1 << 17)
   or t1, t1, a0
   csrw mstatus, t1
 
   mv a0, sp
-  call __am_irq_handle
+  call __am_irq_handle //目前在这个函数中 让mepc += 4，并把c再返回到a0中
   mv sp, a0//将栈指针sp从a0中恢复回来
 
   LOAD t1, OFFSET_STATUS(sp)

@@ -5,7 +5,7 @@
 #define KEYDOWN_MASK 0x8000
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
-  // 1. 增加 volatile 强制访存
+
   uint32_t scancode = inl(0xa0000060);
   
   // 2. 只要不是 0 就暴力打印，不管是什么键

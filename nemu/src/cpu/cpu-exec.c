@@ -19,6 +19,7 @@
 #include <locale.h>
 #include "/home/zs/ysyx-workbench/nemu/src/monitor/sdb/watchpoint.h"
 #include "/home/zs/ysyx-workbench/nemu/src/monitor/sdb/expr.h"
+#include <generated/autoconf.h>
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
@@ -94,9 +95,9 @@ static void exec_once(Decode *s, vaddr_t pc) {
   memset(p, ' ', space_len);
   p += space_len;
 
-  //void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-  //disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-  //    MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
+  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
+     MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
 
 
 #endif

@@ -107,7 +107,7 @@ dnpc = snpc;
 
 if (inst == 32'b 0000000_00000_00000_000_00000_1110011)
  begin 
-    mepc_wdata = pc + 4; 
+    mepc_wdata = pc; 
     dnpc = mtvec_rdata; 
     mcause_wdata = 32'h0b;
     wen_mcause = 1;
@@ -168,7 +168,7 @@ if (opcode == 7'b0010011 && func3 == 3'b000)begin alu_res = rs1 + imm; gpr_wdata
 //xori
 if (opcode == 7'b0010011 && func3 == 3'b100)begin alu_res = rs1 ^ imm;  gpr_wdata = alu_res; end
 //ebreak
-if (opcode == 7'b1110011 && func3 == 3'b000 && inst[20] == 1)begin ebreak(); end
+// if (opcode == 7'b1110011 && func3 == 3'b000 && inst[20] == 1)begin ebreak(); end
 //add
 if (opcode == 7'b0110011 && func3 == 3'b000 && inst[30] == 0)begin alu_res = rs1 + rs2; gpr_wdata = alu_res; end
 //sub

@@ -36,7 +36,7 @@ ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
 
 ### Check if there is something to build
-ifeq ($(flavor SRCS), undefined)
+ifeq ($(flavor SRCS), undefined) # flavor 函数 ： 检查参数SRCS是否被定义
   $(error Nothing to build)
 endif
 
@@ -48,7 +48,7 @@ endif
 ### Create the destination directory (`build/$ARCH`)
 WORK_DIR  = $(shell pwd)
 DST_DIR   = $(WORK_DIR)/build/$(ARCH)
-$(shell mkdir -p $(DST_DIR))
+$(shell mkdir -p $(DST_DIR))   ##-p是递归创建，如果如父目录不存在，会连同父目录一起创建
 
 ### Compilation targets (a binary image or archive)
 IMAGE_REL = build/$(NAME)-$(ARCH)

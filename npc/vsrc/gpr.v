@@ -52,6 +52,7 @@ always @(posedge clk) begin
         mtvec <= 32'b0;
         mepc  <= 32'b0;
         mcause <= 32'b0;
+		mastatus <= 32'h1800;//to pass difftest
     end else begin
         // 使用独立的 if，互不干扰
         if (wen_mtvec)  mtvec  <= mtvec_wdata;

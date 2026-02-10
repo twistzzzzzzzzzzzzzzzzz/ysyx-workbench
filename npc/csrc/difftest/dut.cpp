@@ -61,9 +61,10 @@ bool isa_difftest_checkregs(NPC_State *ref, uint32_t pc) {
         printf("Expected (NEMU): 0x%08x\n", ref->pc);
         printf("Actual   (NPC) : 0x%08x\n", pc);
         return false;
-    }else {
-				printf("[Difftest] PC Match: 0x%08x\n", pc);
-		}
+    }
+    // }else {
+	// 			printf("[Difftest] PC Match: 0x%08x\n", pc);
+	// 	}
 
     // 2. 检查 32 个通用寄存器
     for (int i = 0; i < 32; i++) {
@@ -72,9 +73,10 @@ bool isa_difftest_checkregs(NPC_State *ref, uint32_t pc) {
             printf("Expected (NEMU): 0x%08x\n", ref->gpr[i]);
             printf("Actual   (NPC) : 0x%08x\n", cpu_gpr[i]);
             return false;
-        }else {
-				printf("/[Difftest_GPR] DUT[%d]: 0x%08x VS REF[%d]:0x%08x\n", i, cpu_gpr[i], i, ref->gpr[i]);
-    }
+        }
+    //     }else {
+	// 			printf("/[Difftest_GPR] DUT[%d]: 0x%08x VS REF[%d]:0x%08x\n", i, cpu_gpr[i], i, ref->gpr[i]);
+    // }
 	}
 	 return true;
 }
@@ -87,7 +89,7 @@ void difftest_skip_ref() {
 }
 
 void difftest_step(uint32_t npc_pc, void *npc_regs) {
-     printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
+     //printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
 
     if (is_skip_ref) {
         if (ref_difftest_regcpy) {

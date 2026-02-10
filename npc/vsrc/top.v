@@ -13,12 +13,12 @@ module top(
 
 
 
-always @(posedge clk) begin
-    if (inst == 32'h00002503) begin // 这是 lw a0, 0(a0) 的指令码，你可以根据实际指令改
-        $display("[Time:%t] PC:%x | GPR_WEN:1 | WADDR:%d | WDATA_FROM_EXU:%x | REAL_MEM_DATA:%x", 
-                 $time, pc, gpr_waddr, gpr_wdata, mem_rdata);
-    end
-end
+// always @(posedge clk) begin
+//     if (inst == 32'h00002503) begin // 这是 lw a0, 0(a0) 的指令码，你可以根据实际指令改
+//         $display("[Time:%t] PC:%x | GPR_WEN:1 | WADDR:%d | WDATA_FROM_EXU:%x | REAL_MEM_DATA:%x", 
+//                  $time, pc, gpr_waddr, gpr_wdata, mem_rdata);
+//     end
+// end
 
 
 

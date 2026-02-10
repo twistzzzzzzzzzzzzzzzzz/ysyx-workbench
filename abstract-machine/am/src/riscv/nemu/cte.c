@@ -5,11 +5,12 @@
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
- printf("Final Check: mcause=%d, a7=%d, a0=%d\n", c->mcause, c->gpr[17], c->gpr[10]);
+ //printf("Final Check: mcause=%d, a7=%d, a0=%d\n", c->mcause, c->gpr[17], c->gpr[10]);
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
-      case 11: ev.event = EVENT_YIELD; break;
+      case 11: ev.event = EVENT_YIELD;
+      c->mepc += 4;  break;
       default: ev.event = EVENT_ERROR; break;
     }
 
@@ -37,8 +38,11 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   Context *c = kstack.end - sizeof(Context);
 
   c->mepc = (uintptr_t)entry;
-
+  
   c->gpr[10] = (uintptr_t)arg; // a0
+
+  c->mstatus = 0x1800;  //to pass difftest
+
   return c;
 }
 
