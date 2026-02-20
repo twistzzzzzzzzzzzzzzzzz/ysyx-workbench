@@ -18,6 +18,9 @@
 #define KBD_ADDR        (DEVICE_BASE + 0x00000060)
 #define INPUT_CONF_ADDR (DEVICE_BASE + 0x00000000) // 用于汇报设备存在
 #define SERIAL_PORT (0x10000000)
+//#define VGACTL_ADDR 0xa0000100
+#define FB_ADDR     0xa1000000
+#define SYNC_ADDR   (VGACTL_ADDR + 4)
 uint8_t pmem[MEM_SIZE];
 
 extern Vtop* top_ptr;
@@ -50,118 +53,148 @@ extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
 
 
 
-
-
-// 在 mem.cpp 中
 extern "C" uint32_t paddr_read(uint32_t addr, int len) {
     int data = 0;
     // 根据 len 生成对应的 rmask
-    // len=1 -> 0x1, len=2 -> 0x3, len=4 -> 0xf
     char rmask = (len == 4) ? 0xf : (len == 2 ? 0x3 : 0x1);
     
-    // 调用你给出的这个强大的函数
+    // 调用上面已经写好的 pmem_read 逻辑
     pmem_read(addr, &data, rmask);
     
     return (uint32_t)data;
 }
 
+// 在 mem.cpp 中
+extern bool gpu_read(uint32_t addr, uint32_t *data);
+extern bool gpu_write(uint32_t addr, uint32_t data, uint8_t wmask);
 extern "C" uint32_t keyboard_read();
-// 3. DPI-C 读内存 (供 Verilog 调用)
 extern "C" void pmem_read(int raddr, int *rdata, char rmask) {
-/*-------------------------RTC----------------------*/ 
-   if (raddr == RTC_ADDR || raddr == RTC_ADDR + 4) {
+    // --- 1. 设备区拦截 (0xa0000000 - 0xafffffff) ---
+    if (raddr >= 0xa0000000 && raddr <= 0xafffffff) {
+        #ifdef CONFIG_DIFFTEST
+        difftest_skip_ref();
+        #endif
 
+        // 先交给 GPU 处理 (内部会处理 VGACTL 和 整个显存范围)
+        uint32_t gpu_data;
+        if (gpu_read(raddr, &gpu_data)) {
+            *rdata = gpu_data;
+            return;
+        }
+
+        // 处理 RTC
+        if (raddr == RTC_ADDR || raddr == RTC_ADDR + 4) {
+            uint64_t us = get_time_internal();
+            *rdata = (raddr == RTC_ADDR) ? (uint32_t)us : (uint32_t)(us >> 32);
+            return;
+        }
+
+        // 处理键盘
+        if (raddr == 0xa0000000) { *rdata = 1; return; }
+        if (raddr == 0xa0000060) { *rdata = keyboard_read(); return; }
+
+        *rdata = 0; // 其他设备地址默认返回0
+        return;
+    }
+
+    // --- 2. 内存区访问 (0x80000000 - 0x84000000) ---
+    if (raddr >= MEM_BASE && raddr < MEM_BASE + MEM_SIZE) {
+        uint32_t index = raddr - MEM_BASE;
+        uint8_t *p = (uint8_t *)(pmem + index);
+        int data = 0;
+        if (rmask & 0x01) data |= (p[0]);
+        if (rmask & 0x02) data |= (p[1] << 8);
+        if (rmask & 0x04) data |= (p[2] << 16);
+        if (rmask & 0x08) data |= (p[3] << 24);
+        *rdata = data;
+        return;
+    }
+
+    // --- 3. 非法地址 ---
     #ifdef CONFIG_DIFFTEST
     difftest_skip_ref();
     #endif
-    uint64_t us = get_time_internal();
-    if (raddr == RTC_ADDR) {
-      *rdata = (uint32_t)us;
-    } else {
-      *rdata = (uint32_t)(us >> 32);
-    }
-    return;
-  }
+    *rdata = 0;
+}
 
-
-/*----------------------kbd--------------------*/
-
-// 1. 处理输入设备配置查询 (0xa0000000)
-    if (raddr == 0xa0000000) {
-
-      #ifdef CONFIG_DIFFTEST
+extern "C" void pmem_write(int waddr, int wdata, char wmask) {
+    // --- 1. 串口 (注意串口通常不在 0xa 范围，独立判断) ---
+    if (waddr == SERIAL_PORT) {
+        #ifdef CONFIG_DIFFTEST
         difftest_skip_ref();
-      #endif
-
-        *rdata = 1; // 告诉软件有键盘
+        #endif
+        fputc((char)wdata, stdout);
+        fflush(stdout);
         return;
     }
 
-    // 2. 处理键盘数据读取 (0xa0000060)
-    if (raddr == 0xa0000060) {
-
-      #ifdef CONFIG_DIFFTEST
+    // --- 2. 设备区拦截 (GPU/RTC 等) ---
+    if (waddr >= 0xa0000000 && waddr <= 0xafffffff) {
+        #ifdef CONFIG_DIFFTEST
         difftest_skip_ref();
-
-      #endif
-         *rdata = keyboard_read(); // 直接调用 keyboard.cpp 里的函数
-        //       //  printf("a5 = 0x%08x\n", top_ptr->x15);
-       // *rdata = 0x802c;
+        #endif
+        // 只要是这个范围的写，都交给 gpu_write (它内部会过滤 FB_ADDR 和 SYNC_ADDR)
+        gpu_write(waddr, wdata, wmask);
         return;
     }
 
-
-
-  if (raddr < MEM_BASE || raddr >= MEM_BASE + MEM_SIZE) {
-    #ifdef CONFIG_DIFFTEST
-      difftest_skip_ref();
-    #endif 
-      *rdata = 0;
-      return;
-  }
-
-  // 计算偏移量
-  uint32_t index = raddr - MEM_BASE;
-  uint8_t *p = (uint8_t *)(pmem + index);
-  
-  // 根据 rmask 读取数据
-  int data = 0;
-  if (rmask & 0x01) { data |= (p[0]);       }
-  if (rmask & 0x02) { data |= (p[1] << 8);  }
-  if (rmask & 0x04) { data |= (p[2] << 16); }
-  if (rmask & 0x08) { data |= (p[3] << 24); }
-  *rdata = data;
-
+    // --- 3. 内存区访问 ---
+    if (waddr >= MEM_BASE && waddr < MEM_BASE + MEM_SIZE) {
+        uint32_t index = waddr - MEM_BASE;
+        uint8_t *p = (uint8_t *)(pmem + index);
+        if (wmask & 0x01) p[0] = (wdata) & 0xFF;
+        if (wmask & 0x02) p[1] = (wdata >> 8) & 0xFF;
+        if (wmask & 0x04) p[2] = (wdata >> 16) & 0xFF;
+        if (wmask & 0x08) p[3] = (wdata >> 24) & 0xFF;
+        return;
+    }
 }
 
 
 
 // 4. DPI-C 写内存 (供 Verilog 调用)
-extern "C" void pmem_write(int waddr, int wdata, char wmask) {
-  if (waddr == SERIAL_PORT) {
-    #ifdef CONFIG_DIFFTEST
-      difftest_skip_ref();
-    #endif
-      fputc((char)wdata, stdout); 
-      fflush(stdout);
-      return;
-  }
+// extern "C" void pmem_write(int waddr, int wdata, char wmask) {
 
-  if (waddr < MEM_BASE || waddr >= MEM_BASE + MEM_SIZE) {
-    #ifdef CONFIG_DIFFTEST
-      difftest_skip_ref();
-    #endif
-      return;
-  }
+//   // /*------------------------GPU------------------*/
 
-  uint32_t index = waddr - MEM_BASE;
-  uint8_t *p = (uint8_t *)(pmem + index);
+//   if ((waddr >= FB_ADDR && waddr < FB_ADDR + (400 * 300 * 4)) || 
+//       (waddr == SYNC_ADDR)) {
+//     #ifdef CONFIG_DIFFTEST
+//     difftest_skip_ref();
+//     #endif
+    
+//     // 调用 gpu.cpp 里的逻辑
+//     if (gpu_write(waddr, wdata, wmask)) {
+//       return;
+//     }
+//   }
 
-  if (wmask & 0x01) { p[0] = (wdata)       & 0xFF; }
-  if (wmask & 0x02) { p[1] = (wdata >> 8)  & 0xFF; }
-  if (wmask & 0x04) { p[2] = (wdata >> 16) & 0xFF; }
-  if (wmask & 0x08) { p[3] = (wdata >> 24) & 0xFF; }
-}
+
+//   /*----------------------------------------------*/
+//   if (waddr == SERIAL_PORT) {
+//     #ifdef CONFIG_DIFFTEST
+//       difftest_skip_ref();
+//     #endif
+//       fputc((char)wdata, stdout); 
+//       fflush(stdout);
+//       return;
+//   }
+
+//   if (waddr < MEM_BASE || waddr >= MEM_BASE + MEM_SIZE) {
+//     #ifdef CONFIG_DIFFTEST
+//       difftest_skip_ref();
+//     #endif
+//       return;
+//   }
+
+//   uint32_t index = waddr - MEM_BASE;
+//   uint8_t *p = (uint8_t *)(pmem + index);
+
+//   if (wmask & 0x01) { p[0] = (wdata)       & 0xFF; }
+//   if (wmask & 0x02) { p[1] = (wdata >> 8)  & 0xFF; }
+//   if (wmask & 0x04) { p[2] = (wdata >> 16) & 0xFF; }
+//   if (wmask & 0x08) { p[3] = (wdata >> 24) & 0xFF; }
+// }
 
 
 

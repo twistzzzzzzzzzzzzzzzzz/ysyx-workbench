@@ -27,6 +27,7 @@ uint32_t *cpu_gpr = NULL;
 VerilatedVcdC *tfp = NULL;
 
 // 在 sim_main.cpp 中保留声明即可
+extern void init_vga();
 extern void difftest_step(uint32_t npc_pc);
 extern void init_difftest(char *ref_so_file, long img_size, void *img);
 // 2. 加载镜像文件
@@ -132,6 +133,7 @@ void single_step() {
 
 
 
+
 void init_sim(int argc, char** argv) {
     contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv); 
@@ -181,7 +183,7 @@ void init_sim(int argc, char** argv) {
         init_ftrace(img_file); 
     }
 #endif
-
+    init_vga();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return ;

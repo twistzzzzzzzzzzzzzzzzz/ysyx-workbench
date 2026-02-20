@@ -44,7 +44,7 @@ void init_difftest(char *ref_so_file, long img_size, void *img) {
   //     "If it is not necessary, you can turn it off in menuconfig.", ref_so_file);
 
 
-  ref_difftest_init(1234);
+    ref_difftest_init(1234);
 
 	NPC_State init_state = {0};
 	init_state.pc = 0x80000000; // 初始 PC
