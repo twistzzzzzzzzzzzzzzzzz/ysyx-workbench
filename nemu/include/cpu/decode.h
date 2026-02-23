@@ -58,6 +58,8 @@ finish:
   *key = __key >> __shift;
   *mask = __mask >> __shift;
   *shift = __shift;
+  // 在 pattern_decode 的最后一行加：
+//printf("Pattern: %s -> Key: %lx, Mask: %lx\n", str, *key, *mask);
 }
 
 __attribute__((always_inline))
@@ -97,7 +99,7 @@ finish:
   } \
 } while (0)
 
-#define INSTPAT_START(name) { const void * __instpat_end = &&concat(__instpat_end_, name);
-#define INSTPAT_END(name)   concat(__instpat_end_, name): ; }
+#define INSTPAT_START(name) { const void * __instpat_end = &&concat(__instpat_end_, name);//&&是取标签地址
+#define INSTPAT_END(name)   concat(__instpat_end_, name): ; }//:是标签语法, ;表示空语句
 
 #endif

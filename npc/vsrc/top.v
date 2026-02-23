@@ -112,12 +112,12 @@ wire [4:0]  gpr_raddr;
 wire wen_mtvec;
 wire wen_mepc;
 wire wen_mcause;
-wire wen_mastatus;
+wire wen_mstatus;
 
 wire [31:0] mepc_wdata;
 wire [31:0] mtvec_rdata;
-wire [31:0] mastatus_rdata;
-wire [31:0] mastatus_wdata;
+wire [31:0] mstatus_rdata;
+wire [31:0] mstatus_wdata;
 wire [31:0] mcause_rdata;
 wire [31:0] mcause_wdata;
 wire [31:0] mepc_rdata;
@@ -136,20 +136,20 @@ EXU inst_execute(
     .gpr_wdata        (gpr_wdata),
 
 
-    .mastatus_rdata (mastatus_rdata),
+    .mstatus_rdata (mstatus_rdata),
     .mtvec_rdata    (mtvec_rdata),
     .mepc_rdata     (mepc_rdata),
     .mcause_rdata   (mcause_rdata),
-    .mastatus_wdata (mastatus_wdata),
+    .mstatus_wdata (mstatus_wdata),
     .mtvec_wdata    (mtvec_wdata),
 
     .mcause_wdata   (mcause_wdata),
 
-    .wen_mastatus  ( wen_mastatus),
+    .wen_mstatus  ( wen_mstatus),
     .wen_mtvec     ( wen_mtvec),
     .wen_mepc      ( wen_mepc),
     .wen_mcause    ( wen_mcause),
-    //.wen_mastatus  ( wen_mastatus),
+    //.wen_mstatus  ( wen_mstatus),
 
 
 
@@ -168,7 +168,7 @@ EXU inst_execute(
 );
 
 wire [31:0] mtvec_wdata;
-wire [31:0] mastatus_wdata;
+wire [31:0] mstatus_wdata;
 wire [31:0] mcause_wdata;
 //wire [31:0] mepc_wdata;
 //wire [31:0] final_gpr_wdata = (inst[6:0] == 7'b0000011) ? mem_rdata : gpr_wdata;
@@ -177,16 +177,16 @@ GPR gpr(
     .clk        (clk),
     .rst        (rst),
     .gpr_wen        (gpr_wen),
-    .wen_mastatus (wen_mastatus),
+    .wen_mstatus (wen_mstatus),
     .wen_mtvec   (wen_mtvec),
     .wen_mepc     (wen_mepc),   
     .wen_mcause   (wen_mcause),
 
     .mepc_wdata  (mepc_wdata),
     .mtvec_rdata (mtvec_rdata),
-    .mastatus_rdata (mastatus_rdata),
+    .mstatus_rdata (mstatus_rdata),
     .mcause_rdata (mcause_rdata),
-    .mastatus_wdata (mastatus_wdata),
+    .mstatus_wdata (mstatus_wdata),
     .mcause_wdata (mcause_wdata),
     .mtvec_wdata (mtvec_wdata),
     .mepc_rdata  (mepc_rdata),

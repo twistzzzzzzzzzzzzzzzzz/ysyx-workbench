@@ -3,8 +3,6 @@ NPC_HOME = $(abspath .)
 NEMU_HOME = $(abspath ../nemu)
 AM_HOME = $(abspath ../abstract-machine)
 
--include $(NPC_HOME)/include/config/auto.conf
--include $(NPC_HOME)/include/config/auto.conf.cmd
 
 
 
@@ -37,7 +35,7 @@ LDFLAGS += -lreadline -ldl -lSDL2
 
 default: $(BIN)
 
-$(BIN): $(VSRCS) $(CSRCS) $(NPC_HOME)/include/config/auto.conf
+$(BIN): $(VSRCS) $(CSRCS)
 	@mkdir -p $(BUILD_DIR)
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
 		--top-module $(TOPNAME) \
@@ -53,3 +51,6 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 include script/config.mk
+-include $(NPC_HOME)/include/config/auto.conf
+-include $(NPC_HOME)/include/config/auto.conf.cmd
+

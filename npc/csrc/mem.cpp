@@ -6,21 +6,10 @@
 #include <sys/time.h>
 #include "device/dev.h"
 #include "../include/generated/autoconf.h"
+#include "define.h"
 
 
 
-// 1. 定义内存
-#define MEM_SIZE (64 * 1024 * 1024) // 64 MB
-#define MEM_BASE 0x80000000
-#define DEVICE_BASE 0xa0000000
-#define RTC_ADDR (DEVICE_BASE + 0x00000048)
-#define VGACTL_ADDR (DEVICE_BASE + 0x0000100)
-#define KBD_ADDR        (DEVICE_BASE + 0x00000060)
-#define INPUT_CONF_ADDR (DEVICE_BASE + 0x00000000) // 用于汇报设备存在
-#define SERIAL_PORT (0x10000000)
-//#define VGACTL_ADDR 0xa0000100
-#define FB_ADDR     0xa1000000
-#define SYNC_ADDR   (VGACTL_ADDR + 4)
 uint8_t pmem[MEM_SIZE];
 
 extern Vtop* top_ptr;

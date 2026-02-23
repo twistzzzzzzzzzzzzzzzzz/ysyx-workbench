@@ -22,13 +22,11 @@ class Vtop___024root final : public VerilatedModule {
     CData/*0:0*/ top__DOT__mem_ren;
     CData/*4:0*/ top__DOT__raddr1;
     CData/*4:0*/ top__DOT__raddr2;
-    CData/*6:0*/ top__DOT__opcode;
-    CData/*2:0*/ top__DOT__func3;
     CData/*4:0*/ top__DOT__gpr_waddr;
     CData/*0:0*/ top__DOT__wen_mtvec;
     CData/*0:0*/ top__DOT__wen_mepc;
     CData/*0:0*/ top__DOT__wen_mcause;
-    CData/*0:0*/ top__DOT__wen_mastatus;
+    CData/*0:0*/ top__DOT__wen_mstatus;
     CData/*2:0*/ top__DOT__inst_decode__DOT__inst_type;
     CData/*0:0*/ __VstlDidInit;
     CData/*0:0*/ __Vtrigrprev__TOP__clk;
@@ -47,7 +45,7 @@ class Vtop___024root final : public VerilatedModule {
     IData/*31:0*/ top__DOT__mem_waddr;
     IData/*31:0*/ top__DOT__mem_raddr;
     IData/*31:0*/ top__DOT__mepc_wdata;
-    IData/*31:0*/ top__DOT__mastatus_wdata;
+    IData/*31:0*/ top__DOT__mstatus_wdata;
     IData/*31:0*/ top__DOT__mcause_wdata;
     IData/*31:0*/ top__DOT__mtvec_wdata;
     IData/*31:0*/ top__DOT__ram__DOT__inst_temp;
@@ -58,7 +56,7 @@ class Vtop___024root final : public VerilatedModule {
     IData/*31:0*/ top__DOT__gpr__DOT__mepc;
     IData/*31:0*/ top__DOT__gpr__DOT__mtvec;
     IData/*31:0*/ top__DOT__gpr__DOT__mcause;
-    IData/*31:0*/ top__DOT__gpr__DOT__mastatus;
+    IData/*31:0*/ top__DOT__gpr__DOT__mstatus;
     IData/*31:0*/ __Vtask_top__DOT__ram__DOT__pmem_read__0__rdata;
     IData/*31:0*/ __Vtask_top__DOT__ram__DOT__pmem_read__1__rdata;
     IData/*31:0*/ __Vtrigrprev__TOP__top__DOT__ram__DOT__rdata_temp;

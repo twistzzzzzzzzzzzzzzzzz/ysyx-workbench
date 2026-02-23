@@ -121,8 +121,7 @@ extern "C" void log_ftrace(int pc, int target, svBit is_return) {
   if (is_return) {
     stack_depth--;
     if (stack_depth < 0) stack_depth = 0;
-    // 修改后的 printf 版本
-
+ 
     #ifdef CONFIG_FTRACE
     printf("0x%08x: %*s \033[1;34mret\033[0m  [%s]\n", 
        pc, 

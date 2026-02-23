@@ -2,7 +2,7 @@ module GPR(
   	input clk,
 	input rst,
   	input gpr_wen,
-	input wen_mastatus,
+	input wen_mstatus,
 	input wen_mtvec,
 	input wen_mepc,
 	input wen_mcause,
@@ -13,10 +13,10 @@ module GPR(
 
 	input [31:0] mepc_wdata,
 	input [31:0] mtvec_wdata,
-	output reg [31:0] mastatus_rdata,
+	output reg [31:0] mstatus_rdata,
 	output  reg [31:0] mcause_rdata,
 	output reg [31:0]  mtvec_rdata,
-	input [31:0]  mastatus_wdata,
+	input [31:0]  mstatus_wdata,
 	input [31:0]  mcause_wdata,
 	output reg [31:0]  mepc_rdata,
 
@@ -44,7 +44,7 @@ end
 	reg [31:0] mepc;
 	reg [31:0] mtvec;
 	reg [31:0] mcause;
-	reg [31:0] mastatus;
+	reg [31:0] mstatus;
 
 
 always @(posedge clk) begin
@@ -52,13 +52,13 @@ always @(posedge clk) begin
         mtvec <= 32'b0;
         mepc  <= 32'b0;
         mcause <= 32'b0;
-		mastatus <= 32'h1800;//to pass difftest
+		mstatus <= 32'h1800;//to pass difftest
     end else begin
         // 使用独立的 if，互不干扰
         if (wen_mtvec)  mtvec  <= mtvec_wdata;
         if (wen_mepc)   mepc   <= mepc_wdata;
         if (wen_mcause) mcause <= mcause_wdata;
-        if (wen_mastatus) mastatus <= mastatus_wdata;
+        if (wen_mstatus) mstatus <= mstatus_wdata;
     end
 end
 
@@ -66,7 +66,7 @@ end
 
 
   // r(x0) = 0
-	assign mastatus_rdata = mastatus;
+	assign mstatus_rdata = mstatus;
 	assign mtvec_rdata = mtvec;
 	assign mepc_rdata = mepc;
 	assign mcause_rdata = mcause;

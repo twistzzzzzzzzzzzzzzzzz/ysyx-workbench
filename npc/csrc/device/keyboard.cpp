@@ -42,7 +42,7 @@ extern "C" uint32_t keyboard_read() {
 }
 
 
-// 这个函数需要你在 main 循环中调用，用来同步 SDL 事件
+
 static uint32_t translate_sdl_to_am(SDL_Keycode sym) {
     switch (sym) {
         // 第一排：功能键
@@ -144,6 +144,8 @@ static uint32_t translate_sdl_to_am(SDL_Keycode sym) {
         default:             return 0;
     }
 }
+
+// 这个函数需要你在 main 循环中调用，用来同步 SDL 事件
 void update_keyboard_state() {
     SDL_Event event;
     // 使用 PollEvent 不会阻塞程序运行
